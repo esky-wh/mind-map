@@ -5605,11 +5605,11 @@ var require_html2canvas = __commonJS({
       };
       function __awaiter(thisArg, _arguments, P2, generator) {
         function adopt2(value) {
-          return value instanceof P2 ? value : new P2(function(resolve2) {
-            resolve2(value);
+          return value instanceof P2 ? value : new P2(function(resolve) {
+            resolve(value);
           });
         }
-        return new (P2 || (P2 = Promise))(function(resolve2, reject) {
+        return new (P2 || (P2 = Promise))(function(resolve, reject) {
           function fulfilled(value) {
             try {
               step(generator.next(value));
@@ -5625,7 +5625,7 @@ var require_html2canvas = __commonJS({
             }
           }
           function step(result) {
-            result.done ? resolve2(result.value) : adopt2(result.value).then(fulfilled, rejected);
+            result.done ? resolve(result.value) : adopt2(result.value).then(fulfilled, rejected);
           }
           step((generator = generator.apply(thisArg, _arguments || [])).next());
         });
@@ -9762,10 +9762,10 @@ var require_html2canvas = __commonJS({
         return svg2;
       };
       var loadSerializedSVG$1 = function(svg2) {
-        return new Promise(function(resolve2, reject) {
+        return new Promise(function(resolve, reject) {
           var img = new Image();
           img.onload = function() {
-            return resolve2(img);
+            return resolve(img);
           };
           img.onerror = reject;
           img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(new XMLSerializer().serializeToString(svg2));
@@ -11130,24 +11130,24 @@ var require_html2canvas = __commonJS({
         return cloneIframeContainer;
       };
       var imageReady = function(img) {
-        return new Promise(function(resolve2) {
+        return new Promise(function(resolve) {
           if (img.complete) {
-            resolve2();
+            resolve();
             return;
           }
           if (!img.src) {
-            resolve2();
+            resolve();
             return;
           }
-          img.onload = resolve2;
-          img.onerror = resolve2;
+          img.onload = resolve;
+          img.onerror = resolve;
         });
       };
       var imagesReady = function(document4) {
         return Promise.all([].slice.call(document4.images, 0).map(imageReady));
       };
       var iframeLoader = function(iframe) {
-        return new Promise(function(resolve2, reject) {
+        return new Promise(function(resolve, reject) {
           var cloneWindow = iframe.contentWindow;
           if (!cloneWindow) {
             return reject("No window assigned for iframe");
@@ -11158,7 +11158,7 @@ var require_html2canvas = __commonJS({
             var interval = setInterval(function() {
               if (documentClone.body.childNodes.length > 0 && documentClone.readyState === "complete") {
                 clearInterval(interval);
-                resolve2(iframe);
+                resolve(iframe);
               }
             }, 50);
           };
@@ -11298,10 +11298,10 @@ var require_html2canvas = __commonJS({
                     _a2.label = 2;
                   case 2:
                     this.context.logger.debug("Added image " + key.substring(0, 256));
-                    return [4, new Promise(function(resolve2, reject) {
+                    return [4, new Promise(function(resolve, reject) {
                       var img = new Image();
                       img.onload = function() {
-                        return resolve2(img);
+                        return resolve(img);
                       };
                       img.onerror = reject;
                       if (isInlineBase64Image(src) || useCORS) {
@@ -11310,7 +11310,7 @@ var require_html2canvas = __commonJS({
                       img.src = src;
                       if (img.complete === true) {
                         setTimeout(function() {
-                          return resolve2(img);
+                          return resolve(img);
                         }, 500);
                       }
                       if (_this._options.imageTimeout > 0) {
@@ -11338,17 +11338,17 @@ var require_html2canvas = __commonJS({
               throw new Error("No proxy defined");
             }
             var key = src.substring(0, 256);
-            return new Promise(function(resolve2, reject) {
+            return new Promise(function(resolve, reject) {
               var responseType = FEATURES.SUPPORT_RESPONSE_TYPE ? "blob" : "text";
               var xhr = new XMLHttpRequest();
               xhr.onload = function() {
                 if (xhr.status === 200) {
                   if (responseType === "text") {
-                    resolve2(xhr.response);
+                    resolve(xhr.response);
                   } else {
                     var reader_1 = new FileReader();
                     reader_1.addEventListener("load", function() {
-                      return resolve2(reader_1.result);
+                      return resolve(reader_1.result);
                     }, false);
                     reader_1.addEventListener("error", function(e3) {
                       return reject(e3);
@@ -13188,10 +13188,10 @@ var require_html2canvas = __commonJS({
         }(Renderer)
       );
       var loadSerializedSVG = function(svg2) {
-        return new Promise(function(resolve2, reject) {
+        return new Promise(function(resolve, reject) {
           var img = new Image();
           img.onload = function() {
-            resolve2(img);
+            resolve(img);
           };
           img.onerror = reject;
           img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(new XMLSerializer().serializeToString(svg2));
@@ -16134,8 +16134,8 @@ var require_promise_constructor_detection = __commonJS({
       if (IS_PURE3 && !(NativePromisePrototype["catch"] && NativePromisePrototype["finally"]))
         return true;
       if (!V8_VERSION || V8_VERSION < 51 || !/native code/.test(PROMISE_CONSTRUCTOR_SOURCE)) {
-        var promise = new NativePromiseConstructor(function(resolve2) {
-          resolve2(1);
+        var promise = new NativePromiseConstructor(function(resolve) {
+          resolve(1);
         });
         var FakePromise = function(exec2) {
           exec2(function() {
@@ -16166,14 +16166,14 @@ var require_new_promise_capability = __commonJS({
     var aCallable = require_a_callable();
     var $TypeError = TypeError;
     var PromiseCapability = function(C2) {
-      var resolve2, reject;
+      var resolve, reject;
       this.promise = new C2(function($$resolve, $$reject) {
-        if (resolve2 !== void 0 || reject !== void 0)
+        if (resolve !== void 0 || reject !== void 0)
           throw $TypeError("Bad Promise constructor");
-        resolve2 = $$resolve;
+        resolve = $$resolve;
         reject = $$reject;
       });
-      this.resolve = aCallable(resolve2);
+      this.resolve = aCallable(resolve);
       this.reject = aCallable(reject);
     };
     module.exports.f = function(C2) {
@@ -16243,7 +16243,7 @@ var require_es_promise_constructor = __commonJS({
       var value = state.value;
       var ok = state.state == FULFILLED;
       var handler = ok ? reaction.ok : reaction.fail;
-      var resolve2 = reaction.resolve;
+      var resolve = reaction.resolve;
       var reject = reaction.reject;
       var domain = reaction.domain;
       var result, then, exited;
@@ -16268,9 +16268,9 @@ var require_es_promise_constructor = __commonJS({
           if (result === reaction.promise) {
             reject(TypeError2("Promise-chain cycle"));
           } else if (then = isThenable(result)) {
-            call4(then, result, resolve2, reject);
+            call4(then, result, resolve, reject);
           } else
-            resolve2(result);
+            resolve(result);
         } else
           reject(value);
       } catch (error) {
@@ -16443,8 +16443,8 @@ var require_es_promise_constructor = __commonJS({
         if (!NATIVE_PROMISE_SUBCLASSING) {
           defineBuiltIn2(NativePromisePrototype, "then", function then(onFulfilled, onRejected) {
             var that = this;
-            return new PromiseConstructor(function(resolve2, reject) {
-              call4(nativeThen, that, resolve2, reject);
+            return new PromiseConstructor(function(resolve, reject) {
+              call4(nativeThen, that, resolve, reject);
             }).then(onFulfilled, onRejected);
           }, { unsafe: true });
         }
@@ -16697,7 +16697,7 @@ var require_es_promise_all = __commonJS({
       all: function all2(iterable) {
         var C2 = this;
         var capability = newPromiseCapabilityModule.f(C2);
-        var resolve2 = capability.resolve;
+        var resolve = capability.resolve;
         var reject = capability.reject;
         var result = perform(function() {
           var $promiseResolve = aCallable(C2.resolve);
@@ -16713,10 +16713,10 @@ var require_es_promise_all = __commonJS({
                 return;
               alreadyCalled = true;
               values[index3] = value;
-              --remaining || resolve2(values);
+              --remaining || resolve(values);
             }, reject);
           });
-          --remaining || resolve2(values);
+          --remaining || resolve(values);
         });
         if (result.error)
           reject(result.value);
@@ -16812,8 +16812,8 @@ var require_promise_resolve = __commonJS({
       if (isObject(x3) && x3.constructor === C2)
         return x3;
       var promiseCapability = newPromiseCapability.f(C2);
-      var resolve2 = promiseCapability.resolve;
-      resolve2(x3);
+      var resolve = promiseCapability.resolve;
+      resolve(x3);
       return promiseCapability.promise;
     };
   }
@@ -16832,7 +16832,7 @@ var require_es_promise_resolve = __commonJS({
     var PromiseConstructorWrapper = getBuiltIn("Promise");
     var CHECK_WRAPPER = IS_PURE3 && !FORCED_PROMISE_CONSTRUCTOR;
     $9({ target: "Promise", stat: true, forced: IS_PURE3 || FORCED_PROMISE_CONSTRUCTOR }, {
-      resolve: function resolve2(x3) {
+      resolve: function resolve(x3) {
         return promiseResolve(CHECK_WRAPPER && this === PromiseConstructorWrapper ? NativePromiseConstructor : this, x3);
       }
     });
@@ -16852,7 +16852,7 @@ var init_es_promise = __esm({
 });
 
 // ../simple-mind-map/node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js
-function asyncGeneratorStep(gen, resolve2, reject, _next, _throw, key, arg) {
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
   try {
     var info = gen[key](arg);
     var value = info.value;
@@ -16861,7 +16861,7 @@ function asyncGeneratorStep(gen, resolve2, reject, _next, _throw, key, arg) {
     return;
   }
   if (info.done) {
-    resolve2(value);
+    resolve(value);
   } else {
     Promise.resolve(value).then(_next, _throw);
   }
@@ -16869,13 +16869,13 @@ function asyncGeneratorStep(gen, resolve2, reject, _next, _throw, key, arg) {
 function _asyncToGenerator(fn) {
   return function() {
     var self2 = this, args = arguments;
-    return new Promise(function(resolve2, reject) {
+    return new Promise(function(resolve, reject) {
       var gen = fn.apply(self2, args);
       function _next(value) {
-        asyncGeneratorStep(gen, resolve2, reject, _next, _throw, "next", value);
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
       }
       function _throw(err) {
-        asyncGeneratorStep(gen, resolve2, reject, _next, _throw, "throw", err);
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
       }
       _next(void 0);
     });
@@ -19980,9 +19980,9 @@ function _createImage() {
     if (anonymousCrossOrigin) {
       image.crossOrigin = "Anonymous";
     }
-    return new Promise((resolve2, reject) => {
+    return new Promise((resolve, reject) => {
       image.onload = () => {
-        resolve2(image);
+        resolve(image);
       };
       image.onerror = (_event, _source, _lineno, _colno, error) => {
         reject(error);
@@ -20697,8 +20697,8 @@ var init_index_es = __esm({
         } = this;
         var frameDuration = 1e3 / FRAMERATE;
         this.frameDuration = frameDuration;
-        this.readyPromise = new Promise((resolve2) => {
-          this.resolveReady = resolve2;
+        this.readyPromise = new Promise((resolve) => {
+          this.resolveReady = resolve;
         });
         if (this.isReady()) {
           this.render(element2, ignoreDimensions, ignoreClear, scaleWidth, scaleHeight, offsetX, offsetY);
@@ -28906,9 +28906,9 @@ var require_quill = __commonJS({
                   } else if (_instanceof(parent2, nativeSet)) {
                     child = new nativeSet();
                   } else if (_instanceof(parent2, nativePromise)) {
-                    child = new nativePromise(function(resolve2, reject) {
+                    child = new nativePromise(function(resolve, reject) {
                       parent2.then(function(value) {
-                        resolve2(_clone(value, depth2 - 1));
+                        resolve(_clone(value, depth2 - 1));
                       }, function(err) {
                         reject(_clone(err, depth2 - 1));
                       });
@@ -39145,6 +39145,10 @@ var CONSTANTS = {
   PASTE_TYPE: {
     CLIP_BOARD: "clipBoard",
     CANVAS: "canvas"
+  },
+  SCROLL_BAR_DIR: {
+    VERTICAL: "vertical",
+    HORIZONTAL: "horizontal"
   }
 };
 var initRootNodePositionMap = {
@@ -39325,7 +39329,10 @@ var View = class {
       if (mousewheelAction === CONSTANTS.MOUSE_WHEEL_ACTION.ZOOM) {
         if (disableMouseWheelZoom)
           return;
-        const { x: clientX, y: clientY } = this.mindMap.toPos(e2.clientX, e2.clientY);
+        const { x: clientX, y: clientY } = this.mindMap.toPos(
+          e2.clientX,
+          e2.clientY
+        );
         let cx2 = mouseScaleCenterUseMousePosition ? clientX : void 0;
         let cy2 = mouseScaleCenterUseMousePosition ? clientY : void 0;
         switch (dir) {
@@ -39403,8 +39410,6 @@ var View = class {
   }
   //  平移x方式到
   translateXTo(x3) {
-    if (x3 === 0)
-      return;
     this.x = x3;
     this.transform();
   }
@@ -39417,8 +39422,6 @@ var View = class {
   }
   //  平移y方向到
   translateYTo(y4) {
-    if (y4 === 0)
-      return;
     this.y = y4;
     this.transform();
   }
@@ -39698,6 +39701,522 @@ var Event_default = Event2;
 // ../simple-mind-map/src/core/render/Render.js
 var import_deepmerge = __toESM(require_cjs());
 
+// ../simple-mind-map/node_modules/uuid/dist/esm-browser/rng.js
+var getRandomValues;
+var rnds8 = new Uint8Array(16);
+function rng() {
+  if (!getRandomValues) {
+    getRandomValues = typeof crypto !== "undefined" && crypto.getRandomValues && crypto.getRandomValues.bind(crypto);
+    if (!getRandomValues) {
+      throw new Error("crypto.getRandomValues() not supported. See https://github.com/uuidjs/uuid#getrandomvalues-not-supported");
+    }
+  }
+  return getRandomValues(rnds8);
+}
+
+// ../simple-mind-map/node_modules/uuid/dist/esm-browser/stringify.js
+var byteToHex = [];
+for (let i3 = 0; i3 < 256; ++i3) {
+  byteToHex.push((i3 + 256).toString(16).slice(1));
+}
+function unsafeStringify(arr, offset = 0) {
+  return (byteToHex[arr[offset + 0]] + byteToHex[arr[offset + 1]] + byteToHex[arr[offset + 2]] + byteToHex[arr[offset + 3]] + "-" + byteToHex[arr[offset + 4]] + byteToHex[arr[offset + 5]] + "-" + byteToHex[arr[offset + 6]] + byteToHex[arr[offset + 7]] + "-" + byteToHex[arr[offset + 8]] + byteToHex[arr[offset + 9]] + "-" + byteToHex[arr[offset + 10]] + byteToHex[arr[offset + 11]] + byteToHex[arr[offset + 12]] + byteToHex[arr[offset + 13]] + byteToHex[arr[offset + 14]] + byteToHex[arr[offset + 15]]).toLowerCase();
+}
+
+// ../simple-mind-map/node_modules/uuid/dist/esm-browser/native.js
+var randomUUID = typeof crypto !== "undefined" && crypto.randomUUID && crypto.randomUUID.bind(crypto);
+var native_default = {
+  randomUUID
+};
+
+// ../simple-mind-map/node_modules/uuid/dist/esm-browser/v4.js
+function v4(options, buf, offset) {
+  if (native_default.randomUUID && !buf && !options) {
+    return native_default.randomUUID();
+  }
+  options = options || {};
+  const rnds = options.random || (options.rng || rng)();
+  rnds[6] = rnds[6] & 15 | 64;
+  rnds[8] = rnds[8] & 63 | 128;
+  if (buf) {
+    offset = offset || 0;
+    for (let i3 = 0; i3 < 16; ++i3) {
+      buf[offset + i3] = rnds[i3];
+    }
+    return buf;
+  }
+  return unsafeStringify(rnds);
+}
+var v4_default = v4;
+
+// ../simple-mind-map/src/utils/index.js
+var walk = (root2, parent, beforeCallback, afterCallback, isRoot, layerIndex = 0, index3 = 0) => {
+  let stop = false;
+  if (beforeCallback) {
+    stop = beforeCallback(root2, parent, isRoot, layerIndex, index3);
+  }
+  if (!stop && root2.children && root2.children.length > 0) {
+    let _layerIndex = layerIndex + 1;
+    root2.children.forEach((node3, nodeIndex) => {
+      walk(
+        node3,
+        root2,
+        beforeCallback,
+        afterCallback,
+        false,
+        _layerIndex,
+        nodeIndex
+      );
+    });
+  }
+  afterCallback && afterCallback(root2, parent, isRoot, layerIndex, index3);
+};
+var bfsWalk = (root2, callback) => {
+  let stack = [root2];
+  let isStop = false;
+  if (callback(root2, null) === "stop") {
+    isStop = true;
+  }
+  while (stack.length) {
+    if (isStop) {
+      break;
+    }
+    let cur = stack.shift();
+    if (cur.children && cur.children.length) {
+      cur.children.forEach((item) => {
+        if (isStop)
+          return;
+        stack.push(item);
+        if (callback(item, cur) === "stop") {
+          isStop = true;
+        }
+      });
+    }
+  }
+};
+var resizeImgSizeByOriginRatio = (width2, height2, newWidth, newHeight) => {
+  let arr = [];
+  let nRatio = width2 / height2;
+  let mRatio = newWidth / newHeight;
+  if (nRatio > mRatio) {
+    arr = [nRatio * newHeight, newHeight];
+  } else {
+    arr = [newWidth, newWidth / nRatio];
+  }
+  return arr;
+};
+var resizeImgSize = (width2, height2, maxWidth, maxHeight) => {
+  let nRatio = width2 / height2;
+  let arr = [];
+  if (maxWidth && maxHeight) {
+    if (width2 <= maxWidth && height2 <= maxHeight) {
+      arr = [width2, height2];
+    } else {
+      let mRatio = maxWidth / maxHeight;
+      if (nRatio > mRatio) {
+        arr = [nRatio * maxHeight, maxHeight];
+      } else {
+        arr = [maxWidth, maxWidth / nRatio];
+      }
+    }
+  } else if (maxWidth) {
+    if (width2 <= maxWidth) {
+      arr = [width2, height2];
+    } else {
+      arr = [maxWidth, maxWidth / nRatio];
+    }
+  } else if (maxHeight) {
+    if (height2 <= maxHeight) {
+      arr = [width2, height2];
+    } else {
+      arr = [nRatio * maxHeight, maxHeight];
+    }
+  }
+  return arr;
+};
+var getStrWithBrFromHtml = (str) => {
+  str = str.replace(/<br>/gim, "\n");
+  let el2 = document.createElement("div");
+  el2.innerHTML = str;
+  str = el2.textContent;
+  return str;
+};
+var simpleDeepClone = (data2) => {
+  try {
+    return JSON.parse(JSON.stringify(data2));
+  } catch (error) {
+    return null;
+  }
+};
+var copyRenderTree = (tree, root2, removeActiveState = false) => {
+  tree.data = simpleDeepClone(root2.data);
+  if (removeActiveState) {
+    tree.data.isActive = false;
+  }
+  tree.children = [];
+  if (root2.children && root2.children.length > 0) {
+    root2.children.forEach((item, index3) => {
+      tree.children[index3] = copyRenderTree({}, item, removeActiveState);
+    });
+  }
+  return tree;
+};
+var copyNodeTree = (tree, root2, removeActiveState = false, keepId = false) => {
+  tree.data = simpleDeepClone(root2.nodeData ? root2.nodeData.data : root2.data);
+  if (tree.data.id && !keepId)
+    delete tree.data.id;
+  if (tree.data.uid)
+    delete tree.data.uid;
+  if (removeActiveState) {
+    tree.data.isActive = false;
+  }
+  tree.children = [];
+  if (root2.children && root2.children.length > 0) {
+    root2.children.forEach((item, index3) => {
+      tree.children[index3] = copyNodeTree({}, item, removeActiveState, keepId);
+    });
+  } else if (root2.nodeData && root2.nodeData.children && root2.nodeData.children.length > 0) {
+    root2.nodeData.children.forEach((item, index3) => {
+      tree.children[index3] = copyNodeTree({}, item, removeActiveState, keepId);
+    });
+  }
+  return tree;
+};
+var imgToDataUrl = (src) => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.setAttribute("crossOrigin", "anonymous");
+    img.onload = () => {
+      try {
+        let canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        let ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, img.width, img.height);
+        resolve(canvas.toDataURL());
+      } catch (e2) {
+        reject(e2);
+      }
+    };
+    img.onerror = (e2) => {
+      reject(e2);
+    };
+    img.src = src;
+  });
+};
+var parseDataUrl = (data2) => {
+  if (!/^data:/.test(data2))
+    return data2;
+  let [typeStr, base64] = data2.split(",");
+  let res = /^data:[^/]+\/([^;]+);/.exec(typeStr);
+  let type = res[1];
+  return {
+    type,
+    base64
+  };
+};
+var downloadFile = (file, fileName) => {
+  let a3 = document.createElement("a");
+  a3.href = file;
+  a3.download = fileName;
+  a3.click();
+};
+var throttle = (fn, time = 300, ctx) => {
+  let timer = null;
+  return (...args) => {
+    if (timer) {
+      return;
+    }
+    timer = setTimeout(() => {
+      fn.call(ctx, ...args);
+      timer = null;
+    }, time);
+  };
+};
+var asyncRun = (taskList, callback = () => {
+}) => {
+  let index3 = 0;
+  let len = taskList.length;
+  if (len <= 0) {
+    return callback();
+  }
+  let loop = () => {
+    if (index3 >= len) {
+      callback();
+      return;
+    }
+    taskList[index3]();
+    setTimeout(() => {
+      index3++;
+      loop();
+    }, 0);
+  };
+  loop();
+};
+var degToRad = (deg) => {
+  return deg * (Math.PI / 180);
+};
+var camelCaseToHyphen = (str) => {
+  return str.replace(/([a-z])([A-Z])/g, (...args) => {
+    return args[1] + "-" + args[2].toLowerCase();
+  });
+};
+var measureTextContext = null;
+var measureText = (text3, { italic, bold, fontSize, fontFamily }) => {
+  const font = joinFontStr({
+    italic,
+    bold,
+    fontSize,
+    fontFamily
+  });
+  if (!measureTextContext) {
+    const canvas = document.createElement("canvas");
+    measureTextContext = canvas.getContext("2d");
+  }
+  measureTextContext.save();
+  measureTextContext.font = font;
+  const { width: width2, actualBoundingBoxAscent, actualBoundingBoxDescent } = measureTextContext.measureText(text3);
+  measureTextContext.restore();
+  const height2 = actualBoundingBoxAscent + actualBoundingBoxDescent;
+  return { width: width2, height: height2 };
+};
+var joinFontStr = ({ italic, bold, fontSize, fontFamily }) => {
+  return `${italic ? "italic " : ""} ${bold ? "bold " : ""} ${fontSize}px ${fontFamily} `;
+};
+var nextTick = function(fn, ctx) {
+  let pending = false;
+  let timerFunc = null;
+  let handle = () => {
+    pending = false;
+    ctx ? fn.call(ctx) : fn();
+  };
+  if (typeof MutationObserver !== "undefined") {
+    let counter = 1;
+    let observer = new MutationObserver(handle);
+    let textNode = document.createTextNode(counter);
+    observer.observe(textNode, {
+      characterData: true
+      // 设为 true 表示监视指定目标节点或子节点树中节点所包含的字符数据的变化
+    });
+    timerFunc = function() {
+      counter = (counter + 1) % 2;
+      textNode.data = counter;
+    };
+  } else {
+    timerFunc = setTimeout;
+  }
+  return function() {
+    if (pending)
+      return;
+    pending = true;
+    timerFunc(handle, 0);
+  };
+};
+var checkNodeOuter = (mindMap, node3) => {
+  let elRect = mindMap.elRect;
+  let { scaleX, scaleY, translateX, translateY } = mindMap.draw.transform();
+  let { left, top, width: width2, height: height2 } = node3;
+  let right = (left + width2) * scaleX + translateX;
+  let bottom = (top + height2) * scaleY + translateY;
+  left = left * scaleX + translateX;
+  top = top * scaleY + translateY;
+  let offsetLeft = 0;
+  let offsetTop = 0;
+  if (left < 0) {
+    offsetLeft = -left;
+  }
+  if (right > elRect.width) {
+    offsetLeft = -(right - elRect.width);
+  }
+  if (top < 0) {
+    offsetTop = -top;
+  }
+  if (bottom > elRect.height) {
+    offsetTop = -(bottom - elRect.height);
+  }
+  return {
+    isOuter: offsetLeft !== 0 || offsetTop !== 0,
+    offsetLeft,
+    offsetTop
+  };
+};
+var getTextFromHtmlEl = null;
+var getTextFromHtml = (html2) => {
+  if (!getTextFromHtmlEl) {
+    getTextFromHtmlEl = document.createElement("div");
+  }
+  getTextFromHtmlEl.innerHTML = html2;
+  return getTextFromHtmlEl.textContent;
+};
+var readBlob = (blob) => {
+  return new Promise((resolve, reject) => {
+    let reader = new FileReader();
+    reader.onload = (evt) => {
+      resolve(evt.target.result);
+    };
+    reader.onerror = (err) => {
+      reject(err);
+    };
+    reader.readAsDataURL(blob);
+  });
+};
+var getImageSize = (src) => {
+  return new Promise((resolve) => {
+    let img = new Image();
+    img.src = src;
+    img.onload = () => {
+      resolve({
+        width: img.width,
+        height: img.height
+      });
+    };
+    img.onerror = () => {
+      resolve({
+        width: 0,
+        height: 0
+      });
+    };
+  });
+};
+var createUid = () => {
+  return v4_default();
+};
+var loadImage = (imgFile) => {
+  return new Promise((resolve, reject) => {
+    let fr = new FileReader();
+    fr.readAsDataURL(imgFile);
+    fr.onload = async (e2) => {
+      let url = e2.target.result;
+      let size2 = await getImageSize(url);
+      resolve({
+        url,
+        size: size2
+      });
+    };
+    fr.onerror = (error) => {
+      reject(error);
+    };
+  });
+};
+var removeHTMLEntities = (str) => {
+  ;
+  [["&nbsp;", "&#160;"]].forEach((item) => {
+    str = str.replaceAll(item[0], item[1]);
+  });
+  return str;
+};
+var getType = (data2) => {
+  return Object.prototype.toString.call(data2).slice(7, -1);
+};
+var isUndef = (data2) => {
+  return data2 === null || data2 === void 0 || data2 === "";
+};
+var removeHtmlStyle = (html2) => {
+  return html2.replaceAll(/(<[^\s]+)\s+style=["'][^'"]+["']\s*(>)/g, "$1$2");
+};
+var addHtmlStyle = (html2, tag, style) => {
+  const reg = new RegExp(`(<${tag}[^>]*)(>[^<>]*</${tag}>)`, "g");
+  return html2.replaceAll(reg, `$1 style="${style}"$2`);
+};
+var checkIsRichTextEl = null;
+var checkIsRichText = (str) => {
+  if (!checkIsRichTextEl) {
+    checkIsRichTextEl = document.createElement("div");
+  }
+  checkIsRichTextEl.innerHTML = str;
+  for (let c4 = checkIsRichTextEl.childNodes, i3 = c4.length; i3--; ) {
+    if (c4[i3].nodeType == 1)
+      return true;
+  }
+  return false;
+};
+var replaceHtmlTextEl = null;
+var replaceHtmlText = (html2, searchText, replaceText) => {
+  if (!replaceHtmlTextEl) {
+    replaceHtmlTextEl = document.createElement("div");
+  }
+  replaceHtmlTextEl.innerHTML = html2;
+  let walk2 = (root2) => {
+    let childNodes = root2.childNodes;
+    childNodes.forEach((node3) => {
+      if (node3.nodeType === 1) {
+        walk2(node3);
+      } else if (node3.nodeType === 3) {
+        root2.replaceChild(
+          document.createTextNode(
+            node3.nodeValue.replaceAll(searchText, replaceText)
+          ),
+          node3
+        );
+      }
+    });
+  };
+  walk2(replaceHtmlTextEl);
+  return replaceHtmlTextEl.innerHTML;
+};
+var isWhite = (color) => {
+  color = String(color).replaceAll(/\s+/g, "");
+  return ["#fff", "#ffffff", "#FFF", "#FFFFFF", "rgb(255,255,255)"].includes(
+    color
+  ) || /rgba\(255,255,255,[^)]+\)/.test(color);
+};
+var isTransparent = (color) => {
+  color = String(color).replaceAll(/\s+/g, "");
+  return ["", "transparent"].includes(color) || /rgba\(\d+,\d+,\d+,0\)/.test(color);
+};
+var getVisibleColorFromTheme = (themeConfig) => {
+  let { lineColor, root: root2, second, node: node3 } = themeConfig;
+  let list2 = [
+    lineColor,
+    root2.fillColor,
+    root2.color,
+    second.fillColor,
+    second.color,
+    node3.fillColor,
+    node3.color,
+    root2.borderColor,
+    second.borderColor,
+    node3.borderColor
+  ];
+  for (let i3 = 0; i3 < list2.length; i3++) {
+    let color = list2[i3];
+    if (!isTransparent(color) && !isWhite(color)) {
+      return color;
+    }
+  }
+};
+var getObjectChangedProps = (oldObject, newObject) => {
+  const res = {};
+  Object.keys(newObject).forEach((prop) => {
+    const oldVal = oldObject[prop];
+    const newVal = newObject[prop];
+    if (getType(oldVal) !== getType(newVal)) {
+      res[prop] = newVal;
+      return;
+    }
+    if (getType(oldVal) === "Object") {
+      if (JSON.stringify(oldVal) !== JSON.stringify(newVal)) {
+        res[prop] = newVal;
+        return;
+      }
+    } else {
+      if (oldVal !== newVal) {
+        res[prop] = newVal;
+        return;
+      }
+    }
+  });
+  return res;
+};
+var checkIsNodeStyleDataKey = (key) => {
+  if (/^_/.test(key))
+    return false;
+  if (!nodeDataNoStylePropList.includes(key)) {
+    return true;
+  }
+  return false;
+};
+
 // ../simple-mind-map/src/core/render/node/Style.js
 var rootProp = ["paddingX", "paddingY"];
 var backgroundStyleProps = [
@@ -39877,7 +40396,7 @@ var Style = class {
   hasCustomStyle() {
     let res = false;
     Object.keys(this.ctx.nodeData.data).forEach((item) => {
-      if (!nodeDataNoStylePropList.includes(item)) {
+      if (checkIsNodeStyleDataKey(item)) {
         res = true;
       }
     });
@@ -45709,514 +46228,6 @@ var shapeList = [
   CONSTANTS.SHAPE.CIRCLE
 ];
 
-// ../simple-mind-map/node_modules/uuid/dist/esm-browser/rng.js
-var getRandomValues;
-var rnds8 = new Uint8Array(16);
-function rng() {
-  if (!getRandomValues) {
-    getRandomValues = typeof crypto !== "undefined" && crypto.getRandomValues && crypto.getRandomValues.bind(crypto);
-    if (!getRandomValues) {
-      throw new Error("crypto.getRandomValues() not supported. See https://github.com/uuidjs/uuid#getrandomvalues-not-supported");
-    }
-  }
-  return getRandomValues(rnds8);
-}
-
-// ../simple-mind-map/node_modules/uuid/dist/esm-browser/stringify.js
-var byteToHex = [];
-for (let i3 = 0; i3 < 256; ++i3) {
-  byteToHex.push((i3 + 256).toString(16).slice(1));
-}
-function unsafeStringify(arr, offset = 0) {
-  return (byteToHex[arr[offset + 0]] + byteToHex[arr[offset + 1]] + byteToHex[arr[offset + 2]] + byteToHex[arr[offset + 3]] + "-" + byteToHex[arr[offset + 4]] + byteToHex[arr[offset + 5]] + "-" + byteToHex[arr[offset + 6]] + byteToHex[arr[offset + 7]] + "-" + byteToHex[arr[offset + 8]] + byteToHex[arr[offset + 9]] + "-" + byteToHex[arr[offset + 10]] + byteToHex[arr[offset + 11]] + byteToHex[arr[offset + 12]] + byteToHex[arr[offset + 13]] + byteToHex[arr[offset + 14]] + byteToHex[arr[offset + 15]]).toLowerCase();
-}
-
-// ../simple-mind-map/node_modules/uuid/dist/esm-browser/native.js
-var randomUUID = typeof crypto !== "undefined" && crypto.randomUUID && crypto.randomUUID.bind(crypto);
-var native_default = {
-  randomUUID
-};
-
-// ../simple-mind-map/node_modules/uuid/dist/esm-browser/v4.js
-function v4(options, buf, offset) {
-  if (native_default.randomUUID && !buf && !options) {
-    return native_default.randomUUID();
-  }
-  options = options || {};
-  const rnds = options.random || (options.rng || rng)();
-  rnds[6] = rnds[6] & 15 | 64;
-  rnds[8] = rnds[8] & 63 | 128;
-  if (buf) {
-    offset = offset || 0;
-    for (let i3 = 0; i3 < 16; ++i3) {
-      buf[offset + i3] = rnds[i3];
-    }
-    return buf;
-  }
-  return unsafeStringify(rnds);
-}
-var v4_default = v4;
-
-// ../simple-mind-map/src/utils/index.js
-var walk = (root2, parent, beforeCallback, afterCallback, isRoot, layerIndex = 0, index3 = 0) => {
-  let stop = false;
-  if (beforeCallback) {
-    stop = beforeCallback(root2, parent, isRoot, layerIndex, index3);
-  }
-  if (!stop && root2.children && root2.children.length > 0) {
-    let _layerIndex = layerIndex + 1;
-    root2.children.forEach((node3, nodeIndex) => {
-      walk(
-        node3,
-        root2,
-        beforeCallback,
-        afterCallback,
-        false,
-        _layerIndex,
-        nodeIndex
-      );
-    });
-  }
-  afterCallback && afterCallback(root2, parent, isRoot, layerIndex, index3);
-};
-var bfsWalk = (root2, callback) => {
-  let stack = [root2];
-  let isStop = false;
-  if (callback(root2, null) === "stop") {
-    isStop = true;
-  }
-  while (stack.length) {
-    if (isStop) {
-      break;
-    }
-    let cur = stack.shift();
-    if (cur.children && cur.children.length) {
-      cur.children.forEach((item) => {
-        if (isStop)
-          return;
-        stack.push(item);
-        if (callback(item, cur) === "stop") {
-          isStop = true;
-        }
-      });
-    }
-  }
-};
-var resizeImgSizeByOriginRatio = (width2, height2, newWidth, newHeight) => {
-  let arr = [];
-  let nRatio = width2 / height2;
-  let mRatio = newWidth / newHeight;
-  if (nRatio > mRatio) {
-    arr = [nRatio * newHeight, newHeight];
-  } else {
-    arr = [newWidth, newWidth / nRatio];
-  }
-  return arr;
-};
-var resizeImgSize = (width2, height2, maxWidth, maxHeight) => {
-  let nRatio = width2 / height2;
-  let arr = [];
-  if (maxWidth && maxHeight) {
-    if (width2 <= maxWidth && height2 <= maxHeight) {
-      arr = [width2, height2];
-    } else {
-      let mRatio = maxWidth / maxHeight;
-      if (nRatio > mRatio) {
-        arr = [nRatio * maxHeight, maxHeight];
-      } else {
-        arr = [maxWidth, maxWidth / nRatio];
-      }
-    }
-  } else if (maxWidth) {
-    if (width2 <= maxWidth) {
-      arr = [width2, height2];
-    } else {
-      arr = [maxWidth, maxWidth / nRatio];
-    }
-  } else if (maxHeight) {
-    if (height2 <= maxHeight) {
-      arr = [width2, height2];
-    } else {
-      arr = [nRatio * maxHeight, maxHeight];
-    }
-  }
-  return arr;
-};
-var getStrWithBrFromHtml = (str) => {
-  str = str.replace(/<br>/gim, "\n");
-  let el2 = document.createElement("div");
-  el2.innerHTML = str;
-  str = el2.textContent;
-  return str;
-};
-var simpleDeepClone = (data2) => {
-  try {
-    return JSON.parse(JSON.stringify(data2));
-  } catch (error) {
-    return null;
-  }
-};
-var copyRenderTree = (tree, root2, removeActiveState = false) => {
-  tree.data = simpleDeepClone(root2.data);
-  if (removeActiveState) {
-    tree.data.isActive = false;
-  }
-  tree.children = [];
-  if (root2.children && root2.children.length > 0) {
-    root2.children.forEach((item, index3) => {
-      tree.children[index3] = copyRenderTree({}, item, removeActiveState);
-    });
-  }
-  return tree;
-};
-var copyNodeTree = (tree, root2, removeActiveState = false, keepId = false) => {
-  tree.data = simpleDeepClone(root2.nodeData ? root2.nodeData.data : root2.data);
-  if (tree.data.id && !keepId)
-    delete tree.data.id;
-  if (tree.data.uid)
-    delete tree.data.uid;
-  if (removeActiveState) {
-    tree.data.isActive = false;
-  }
-  tree.children = [];
-  if (root2.children && root2.children.length > 0) {
-    root2.children.forEach((item, index3) => {
-      tree.children[index3] = copyNodeTree({}, item, removeActiveState, keepId);
-    });
-  } else if (root2.nodeData && root2.nodeData.children && root2.nodeData.children.length > 0) {
-    root2.nodeData.children.forEach((item, index3) => {
-      tree.children[index3] = copyNodeTree({}, item, removeActiveState, keepId);
-    });
-  }
-  return tree;
-};
-var imgToDataUrl = (src) => {
-  return new Promise((resolve2, reject) => {
-    const img = new Image();
-    img.setAttribute("crossOrigin", "anonymous");
-    img.onload = () => {
-      try {
-        let canvas = document.createElement("canvas");
-        canvas.width = img.width;
-        canvas.height = img.height;
-        let ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0, img.width, img.height);
-        resolve2(canvas.toDataURL());
-      } catch (e2) {
-        reject(e2);
-      }
-    };
-    img.onerror = (e2) => {
-      reject(e2);
-    };
-    img.src = src;
-  });
-};
-var parseDataUrl = (data2) => {
-  if (!/^data:/.test(data2))
-    return data2;
-  let [typeStr, base64] = data2.split(",");
-  let res = /^data:[^/]+\/([^;]+);/.exec(typeStr);
-  let type = res[1];
-  return {
-    type,
-    base64
-  };
-};
-var downloadFile = (file, fileName) => {
-  let a3 = document.createElement("a");
-  a3.href = file;
-  a3.download = fileName;
-  a3.click();
-};
-var throttle = (fn, time = 300, ctx) => {
-  let timer = null;
-  return (...args) => {
-    if (timer) {
-      return;
-    }
-    timer = setTimeout(() => {
-      fn.call(ctx, ...args);
-      timer = null;
-    }, time);
-  };
-};
-var asyncRun = (taskList, callback = () => {
-}) => {
-  let index3 = 0;
-  let len = taskList.length;
-  if (len <= 0) {
-    return callback();
-  }
-  let loop = () => {
-    if (index3 >= len) {
-      callback();
-      return;
-    }
-    taskList[index3]();
-    setTimeout(() => {
-      index3++;
-      loop();
-    }, 0);
-  };
-  loop();
-};
-var degToRad = (deg) => {
-  return deg * (Math.PI / 180);
-};
-var camelCaseToHyphen = (str) => {
-  return str.replace(/([a-z])([A-Z])/g, (...args) => {
-    return args[1] + "-" + args[2].toLowerCase();
-  });
-};
-var measureTextContext = null;
-var measureText = (text3, { italic, bold, fontSize, fontFamily }) => {
-  const font = joinFontStr({
-    italic,
-    bold,
-    fontSize,
-    fontFamily
-  });
-  if (!measureTextContext) {
-    const canvas = document.createElement("canvas");
-    measureTextContext = canvas.getContext("2d");
-  }
-  measureTextContext.save();
-  measureTextContext.font = font;
-  const { width: width2, actualBoundingBoxAscent, actualBoundingBoxDescent } = measureTextContext.measureText(text3);
-  measureTextContext.restore();
-  const height2 = actualBoundingBoxAscent + actualBoundingBoxDescent;
-  return { width: width2, height: height2 };
-};
-var joinFontStr = ({ italic, bold, fontSize, fontFamily }) => {
-  return `${italic ? "italic " : ""} ${bold ? "bold " : ""} ${fontSize}px ${fontFamily} `;
-};
-var nextTick = function(fn, ctx) {
-  let pending = false;
-  let timerFunc = null;
-  let handle = () => {
-    pending = false;
-    ctx ? fn.call(ctx) : fn();
-  };
-  if (typeof MutationObserver !== "undefined") {
-    let counter = 1;
-    let observer = new MutationObserver(handle);
-    let textNode = document.createTextNode(counter);
-    observer.observe(textNode, {
-      characterData: true
-      // 设为 true 表示监视指定目标节点或子节点树中节点所包含的字符数据的变化
-    });
-    timerFunc = function() {
-      counter = (counter + 1) % 2;
-      textNode.data = counter;
-    };
-  } else {
-    timerFunc = setTimeout;
-  }
-  return function() {
-    if (pending)
-      return;
-    pending = true;
-    timerFunc(handle, 0);
-  };
-};
-var checkNodeOuter = (mindMap, node3) => {
-  let elRect = mindMap.elRect;
-  let { scaleX, scaleY, translateX, translateY } = mindMap.draw.transform();
-  let { left, top, width: width2, height: height2 } = node3;
-  let right = (left + width2) * scaleX + translateX;
-  let bottom = (top + height2) * scaleY + translateY;
-  left = left * scaleX + translateX;
-  top = top * scaleY + translateY;
-  let offsetLeft = 0;
-  let offsetTop = 0;
-  if (left < 0) {
-    offsetLeft = -left;
-  }
-  if (right > elRect.width) {
-    offsetLeft = -(right - elRect.width);
-  }
-  if (top < 0) {
-    offsetTop = -top;
-  }
-  if (bottom > elRect.height) {
-    offsetTop = -(bottom - elRect.height);
-  }
-  return {
-    isOuter: offsetLeft !== 0 || offsetTop !== 0,
-    offsetLeft,
-    offsetTop
-  };
-};
-var getTextFromHtmlEl = null;
-var getTextFromHtml = (html2) => {
-  if (!getTextFromHtmlEl) {
-    getTextFromHtmlEl = document.createElement("div");
-  }
-  getTextFromHtmlEl.innerHTML = html2;
-  return getTextFromHtmlEl.textContent;
-};
-var readBlob = (blob) => {
-  return new Promise((resolve2, reject) => {
-    let reader = new FileReader();
-    reader.onload = (evt) => {
-      resolve2(evt.target.result);
-    };
-    reader.onerror = (err) => {
-      reject(err);
-    };
-    reader.readAsDataURL(blob);
-  });
-};
-var getImageSize = (src) => {
-  return new Promise((resolve2) => {
-    let img = new Image();
-    img.src = src;
-    img.onload = () => {
-      resolve2({
-        width: img.width,
-        height: img.height
-      });
-    };
-    img.onerror = () => {
-      resolve2({
-        width: 0,
-        height: 0
-      });
-    };
-  });
-};
-var createUid = () => {
-  return v4_default();
-};
-var loadImage = (imgFile) => {
-  return new Promise((resolve2, reject) => {
-    let fr = new FileReader();
-    fr.readAsDataURL(imgFile);
-    fr.onload = async (e2) => {
-      let url = e2.target.result;
-      let size2 = await getImageSize(url);
-      resolve2({
-        url,
-        size: size2
-      });
-    };
-    fr.onerror = (error) => {
-      reject(error);
-    };
-  });
-};
-var removeHTMLEntities = (str) => {
-  ;
-  [["&nbsp;", "&#160;"]].forEach((item) => {
-    str = str.replaceAll(item[0], item[1]);
-  });
-  return str;
-};
-var getType = (data2) => {
-  return Object.prototype.toString.call(data2).slice(7, -1);
-};
-var isUndef = (data2) => {
-  return data2 === null || data2 === void 0 || data2 === "";
-};
-var removeHtmlStyle = (html2) => {
-  return html2.replaceAll(/(<[^\s]+)\s+style=["'][^'"]+["']\s*(>)/g, "$1$2");
-};
-var addHtmlStyle = (html2, tag, style) => {
-  const reg = new RegExp(`(<${tag}[^>]*)(>[^<>]*</${tag}>)`, "g");
-  return html2.replaceAll(reg, `$1 style="${style}"$2`);
-};
-var checkIsRichTextEl = null;
-var checkIsRichText = (str) => {
-  if (!checkIsRichTextEl) {
-    checkIsRichTextEl = document.createElement("div");
-  }
-  checkIsRichTextEl.innerHTML = str;
-  for (let c4 = checkIsRichTextEl.childNodes, i3 = c4.length; i3--; ) {
-    if (c4[i3].nodeType == 1)
-      return true;
-  }
-  return false;
-};
-var replaceHtmlTextEl = null;
-var replaceHtmlText = (html2, searchText, replaceText) => {
-  if (!replaceHtmlTextEl) {
-    replaceHtmlTextEl = document.createElement("div");
-  }
-  replaceHtmlTextEl.innerHTML = html2;
-  let walk2 = (root2) => {
-    let childNodes = root2.childNodes;
-    childNodes.forEach((node3) => {
-      if (node3.nodeType === 1) {
-        walk2(node3);
-      } else if (node3.nodeType === 3) {
-        root2.replaceChild(
-          document.createTextNode(
-            node3.nodeValue.replaceAll(searchText, replaceText)
-          ),
-          node3
-        );
-      }
-    });
-  };
-  walk2(replaceHtmlTextEl);
-  return replaceHtmlTextEl.innerHTML;
-};
-var isWhite = (color) => {
-  color = String(color).replaceAll(/\s+/g, "");
-  return ["#fff", "#ffffff", "#FFF", "#FFFFFF", "rgb(255,255,255)"].includes(
-    color
-  ) || /rgba\(255,255,255,[^)]+\)/.test(color);
-};
-var isTransparent = (color) => {
-  color = String(color).replaceAll(/\s+/g, "");
-  return ["", "transparent"].includes(color) || /rgba\(\d+,\d+,\d+,0\)/.test(color);
-};
-var getVisibleColorFromTheme = (themeConfig) => {
-  let { lineColor, root: root2, second, node: node3 } = themeConfig;
-  let list2 = [
-    lineColor,
-    root2.fillColor,
-    root2.color,
-    second.fillColor,
-    second.color,
-    node3.fillColor,
-    node3.color,
-    root2.borderColor,
-    second.borderColor,
-    node3.borderColor
-  ];
-  for (let i3 = 0; i3 < list2.length; i3++) {
-    let color = list2[i3];
-    if (!isTransparent(color) && !isWhite(color)) {
-      return color;
-    }
-  }
-};
-var getObjectChangedProps = (oldObject, newObject) => {
-  const res = {};
-  Object.keys(newObject).forEach((prop) => {
-    const oldVal = oldObject[prop];
-    const newVal = newObject[prop];
-    if (getType(oldVal) !== getType(newVal)) {
-      res[prop] = newVal;
-      return;
-    }
-    if (getType(oldVal) === "Object") {
-      if (JSON.stringify(oldVal) !== JSON.stringify(newVal)) {
-        res[prop] = newVal;
-        return;
-      }
-    } else {
-      if (oldVal !== newVal) {
-        res[prop] = newVal;
-        return;
-      }
-    }
-  });
-  return res;
-};
-
 // ../simple-mind-map/src/core/render/node/nodeGeneralization.js
 function checkHasGeneralization() {
   return !!this.nodeData.data.generalization;
@@ -47474,7 +47485,11 @@ var Node2 = class {
       this.active(e2);
     });
     this.group.on("mousedown", (e2) => {
-      const { readonly, enableCtrlKeyNodeSelection, useLeftKeySelectionRightKeyDrag } = this.mindMap.opt;
+      const {
+        readonly,
+        enableCtrlKeyNodeSelection,
+        useLeftKeySelectionRightKeyDrag
+      } = this.mindMap.opt;
       if (!readonly) {
         if (this.isRoot) {
           if (e2.which === 3 && !useLeftKeySelectionRightKeyDrag) {
@@ -47499,11 +47514,9 @@ var Node2 = class {
         this.mindMap.renderer[isActive ? "removeActiveNode" : "addActiveNode"](
           this
         );
-        this.mindMap.emit(
-          "node_active",
-          isActive ? null : this,
-          [...this.mindMap.renderer.activeNodeList]
-        );
+        this.mindMap.emit("node_active", isActive ? null : this, [
+          ...this.mindMap.renderer.activeNodeList
+        ]);
       }
       this.mindMap.emit("node_mousedown", this, e2);
     });
@@ -47537,7 +47550,7 @@ var Node2 = class {
       }
       e2.stopPropagation();
       e2.preventDefault();
-      if (!useLeftKeySelectionRightKeyDrag && this.mindMap.select.hasSelectRange()) {
+      if (this.mindMap.select && !useLeftKeySelectionRightKeyDrag && this.mindMap.select.hasSelectRange()) {
         return;
       }
       if (this.nodeData.data.isActive) {
@@ -47793,12 +47806,12 @@ var Node2 = class {
   }
   //  检测当前节点是否是某个节点的祖先节点
   isParent(node3) {
-    if (this === node3) {
+    if (this.uid === node3.uid) {
       return false;
     }
     let parent = node3.parent;
     while (parent) {
-      if (this === parent) {
+      if (this.uid === parent.uid) {
         return true;
       }
       parent = parent.parent;
@@ -47807,11 +47820,11 @@ var Node2 = class {
   }
   //  检测当前节点是否是某个节点的兄弟节点
   isBrother(node3) {
-    if (!this.parent || this === node3) {
+    if (!this.parent || this.uid === node3.uid) {
       return false;
     }
     return this.parent.children.find((item) => {
-      return item === node3;
+      return item.uid === node3.uid;
     });
   }
   //  获取padding值
@@ -47859,7 +47872,7 @@ var Node2 = class {
 var Node_default = Node2;
 
 // ../simple-mind-map/src/utils/Lru.js
-var CRU = class {
+var Lru = class {
   constructor(max3) {
     this.max = max3 || 1e3;
     this.size = 0;
@@ -47899,7 +47912,7 @@ var Base2 = class {
     this.mindMap = renderer.mindMap;
     this.draw = this.mindMap.draw;
     this.root = null;
-    this.lru = new CRU(this.mindMap.opt.maxNodeCacheCount);
+    this.lru = new Lru(this.mindMap.opt.maxNodeCacheCount);
   }
   //  计算节点位置
   doLayout() {
@@ -48056,9 +48069,13 @@ var Base2 = class {
     });
   }
   //  递归计算节点的宽度
-  getNodeAreaWidth(node3) {
+  getNodeAreaWidth(node3, withGeneralization = false) {
     let widthArr = [];
+    let totalGeneralizationNodeWidth = 0;
     let loop = (node4, width2) => {
+      if (withGeneralization && node4.checkHasGeneralization()) {
+        totalGeneralizationNodeWidth += node4._generalizationNodeWidth;
+      }
       if (node4.children.length) {
         width2 += node4.width / 2;
         node4.children.forEach((item) => {
@@ -48070,7 +48087,7 @@ var Base2 = class {
       }
     };
     loop(node3, 0);
-    return Math.max(...widthArr);
+    return Math.max(...widthArr) + totalGeneralizationNodeWidth;
   }
   //  二次贝塞尔曲线
   quadraticCurvePath(x1, y1, x22, y22) {
@@ -48220,6 +48237,11 @@ var LogicalStructure = class extends Base_default {
         cur._node.childrenAreaHeight = len ? cur._node.children.reduce((h3, item) => {
           return h3 + item.height;
         }, 0) + (len + 1) * this.getMarginY(layerIndex + 1) : 0;
+        let generalizationNodeHeight = cur._node.checkHasGeneralization() ? cur._node._generalizationNodeHeight + this.getMarginY(layerIndex + 1) : 0;
+        cur._node.childrenAreaHeight2 = Math.max(
+          cur._node.childrenAreaHeight,
+          generalizationNodeHeight
+        );
       },
       true,
       0
@@ -48254,7 +48276,7 @@ var LogicalStructure = class extends Base_default {
         if (!node3.nodeData.data.expand) {
           return;
         }
-        let difference2 = node3.childrenAreaHeight - this.getMarginY(layerIndex + 1) * 2 - node3.height;
+        let difference2 = node3.childrenAreaHeight2 - this.getMarginY(layerIndex + 1) * 2 - node3.height;
         if (difference2 > 0) {
           this.updateBrothers(node3, difference2 / 2);
         }
@@ -48268,10 +48290,10 @@ var LogicalStructure = class extends Base_default {
     if (node3.parent) {
       let childrenList = node3.parent.children;
       let index3 = childrenList.findIndex((item) => {
-        return item === node3;
+        return item.uid === node3.uid;
       });
       childrenList.forEach((item, _index) => {
-        if (item === node3 || item.hasCustomPosition()) {
+        if (item.uid === node3.uid || item.hasCustomPosition()) {
           return;
         }
         let _offset = 0;
@@ -48480,6 +48502,15 @@ var MindMap = class extends Base_default {
         });
         cur._node.leftChildrenAreaHeight = leftChildrenAreaHeight + (leftLen + 1) * this.getMarginY(layerIndex + 1);
         cur._node.rightChildrenAreaHeight = rightChildrenAreaHeight + (rightLen + 1) * this.getMarginY(layerIndex + 1);
+        let generalizationNodeHeight = cur._node.checkHasGeneralization() ? cur._node._generalizationNodeHeight + this.getMarginY(layerIndex + 1) : 0;
+        cur._node.leftChildrenAreaHeight2 = Math.max(
+          cur._node.leftChildrenAreaHeight,
+          generalizationNodeHeight
+        );
+        cur._node.rightChildrenAreaHeight2 = Math.max(
+          cur._node.rightChildrenAreaHeight,
+          generalizationNodeHeight
+        );
       },
       true,
       0
@@ -48521,8 +48552,8 @@ var MindMap = class extends Base_default {
           return;
         }
         let base = this.getMarginY(layerIndex + 1) * 2 + node3.height;
-        let leftDifference = node3.leftChildrenAreaHeight - base;
-        let rightDifference = node3.rightChildrenAreaHeight - base;
+        let leftDifference = node3.leftChildrenAreaHeight2 - base;
+        let rightDifference = node3.rightChildrenAreaHeight2 - base;
         if (leftDifference > 0 || rightDifference > 0) {
           this.updateBrothers(node3, leftDifference / 2, rightDifference / 2);
         }
@@ -48538,7 +48569,7 @@ var MindMap = class extends Base_default {
         return item.dir === node3.dir;
       });
       let index3 = childrenList.findIndex((item) => {
-        return item === node3;
+        return item.uid === node3.uid;
       });
       childrenList.forEach((item, _index) => {
         if (item.hasCustomPosition()) {
@@ -48787,11 +48818,11 @@ var CatalogOrganization = class extends Base_default {
               totalLeft += cur.width + marginX;
             });
           } else {
-            let totalTop = node3.top + node3.height + marginY + (this.getNodeActChildrenLength(node3) > 0 ? node3.expandBtnSize : 0);
+            let totalTop = node3.top + this.getNodeHeightWithGeneralization(node3) + marginY + (this.getNodeActChildrenLength(node3) > 0 ? node3.expandBtnSize : 0);
             node3.children.forEach((cur) => {
               cur.left = node3.left + node3.width * 0.5;
               cur.top = totalTop;
-              totalTop += cur.height + marginY + (this.getNodeActChildrenLength(cur) > 0 ? cur.expandBtnSize : 0);
+              totalTop += this.getNodeHeightWithGeneralization(cur) + marginY + (this.getNodeActChildrenLength(cur) > 0 ? cur.expandBtnSize : 0);
             });
           }
         }
@@ -48810,7 +48841,7 @@ var CatalogOrganization = class extends Base_default {
           return;
         }
         if (parent && parent.isRoot) {
-          let areaWidth = this.getNodeAreaWidth(node3);
+          let areaWidth = this.getNodeAreaWidth(node3, true);
           let difference2 = areaWidth - node3.width;
           if (difference2 > 0) {
             this.updateBrothersLeft(node3, difference2);
@@ -48820,7 +48851,7 @@ var CatalogOrganization = class extends Base_default {
         if (parent && !parent.isRoot && len > 0) {
           let marginY = this.getMarginY(layerIndex + 1);
           let totalHeight = node3.children.reduce((h3, item) => {
-            return h3 + item.height + (this.getNodeActChildrenLength(item) > 0 ? item.expandBtnSize : 0);
+            return h3 + this.getNodeHeightWithGeneralization(item) + (this.getNodeActChildrenLength(item) > 0 ? item.expandBtnSize : 0);
           }, 0) + len * marginY;
           this.updateBrothersTop(node3, totalHeight);
         }
@@ -48841,7 +48872,7 @@ var CatalogOrganization = class extends Base_default {
     if (node3.parent) {
       let childrenList = node3.parent.children;
       let index3 = childrenList.findIndex((item) => {
-        return item === node3;
+        return item.uid === node3.uid;
       });
       childrenList.forEach((item, _index) => {
         if (item.hasCustomPosition() || _index <= index3) {
@@ -48860,7 +48891,7 @@ var CatalogOrganization = class extends Base_default {
     if (node3.parent && !node3.parent.isRoot) {
       let childrenList = node3.parent.children;
       let index3 = childrenList.findIndex((item) => {
-        return item === node3;
+        return item.uid === node3.uid;
       });
       childrenList.forEach((item, _index) => {
         if (item.hasCustomPosition()) {
@@ -49060,6 +49091,11 @@ var OrganizationStructure = class extends Base_default {
         cur._node.childrenAreaWidth = len ? cur._node.children.reduce((h3, item) => {
           return h3 + item.width;
         }, 0) + (len + 1) * this.getMarginY(layerIndex + 1) : 0;
+        let generalizationNodeWidth = cur._node.checkHasGeneralization() ? cur._node._generalizationNodeWidth + this.getMarginY(layerIndex + 1) : 0;
+        cur._node.childrenAreaWidth2 = Math.max(
+          cur._node.childrenAreaWidth,
+          generalizationNodeWidth
+        );
       },
       true,
       0
@@ -49094,7 +49130,7 @@ var OrganizationStructure = class extends Base_default {
         if (!node3.nodeData.data.expand) {
           return;
         }
-        let difference2 = node3.childrenAreaWidth - this.getMarginY(layerIndex + 1) * 2 - node3.width;
+        let difference2 = node3.childrenAreaWidth2 - this.getMarginY(layerIndex + 1) * 2 - node3.width;
         if (difference2 > 0) {
           this.updateBrothers(node3, difference2 / 2);
         }
@@ -49108,7 +49144,7 @@ var OrganizationStructure = class extends Base_default {
     if (node3.parent) {
       let childrenList = node3.parent.children;
       let index3 = childrenList.findIndex((item) => {
-        return item === node3;
+        return item.uid === node3.uid;
       });
       childrenList.forEach((item, _index) => {
         if (item.hasCustomPosition()) {
@@ -49392,7 +49428,7 @@ var Timeline2 = class extends Base_default {
     if (node3.parent && !node3.parent.isRoot) {
       let childrenList = node3.parent.children;
       let index3 = childrenList.findIndex((item) => {
-        return item === node3;
+        return item.uid === node3.uid;
       });
       childrenList.forEach((item, _index) => {
         if (item.hasCustomPosition()) {
@@ -49639,12 +49675,12 @@ var VerticalTimeline = class extends Base_default {
     if (node3.parent) {
       let childrenList = node3.parent.children;
       let index3 = childrenList.findIndex((item) => {
-        return item === node3;
+        return item.uid === node3.uid;
       });
       childrenList.forEach((item, _index) => {
         if (item.hasCustomPosition())
           return;
-        if (!node3.parent.isRoot && item === node3)
+        if (!node3.parent.isRoot && item.uid === node3.uid)
           return;
         let _offset = 0;
         if (node3.parent.isRoot) {
@@ -49675,7 +49711,7 @@ var VerticalTimeline = class extends Base_default {
     if (node3.parent && !node3.parent.isRoot) {
       let childrenList = node3.parent.children;
       let index3 = childrenList.findIndex((item) => {
-        return item === node3;
+        return item.uid === node3.uid;
       });
       childrenList.forEach((item, _index) => {
         if (item.hasCustomPosition()) {
@@ -50212,7 +50248,7 @@ var Fishbone = class extends Base_default {
     if (node3.parent && !node3.parent.isRoot) {
       let childrenList = node3.parent.children;
       let index3 = childrenList.findIndex((item) => {
-        return item === node3;
+        return item.uid === node3.uid;
       });
       childrenList.forEach((item, _index) => {
         if (item.hasCustomPosition()) {
@@ -51045,13 +51081,13 @@ var Render = class {
   //  检索某个节点在激活列表里的索引
   findActiveNodeIndex(node3) {
     return this.activeNodeList.findIndex((item) => {
-      return item === node3;
+      return item.uid === node3.uid;
     });
   }
   //  获取节点在同级里的索引位置
   getNodeIndex(node3) {
     return node3.parent ? node3.parent.children.findIndex((item) => {
-      return item === node3;
+      return item.uid === node3.uid;
     }) : 0;
   }
   //  全选
@@ -51190,7 +51226,7 @@ var Render = class {
     let parent = node3.parent;
     let childList = parent.children;
     let index3 = childList.findIndex((item) => {
-      return item === node3;
+      return item.uid === node3.uid;
     });
     if (index3 === -1 || index3 === 0) {
       return;
@@ -51214,7 +51250,7 @@ var Render = class {
     let parent = node3.parent;
     let childList = parent.children;
     let index3 = childList.findIndex((item) => {
-      return item === node3;
+      return item.uid === node3.uid;
     });
     if (index3 === -1 || index3 === childList.length - 1) {
       return;
@@ -51363,7 +51399,7 @@ var Render = class {
     let nodeParent = node3.parent;
     let nodeBorthers = nodeParent.children;
     let nodeIndex = nodeBorthers.findIndex((item) => {
-      return item === node3;
+      return item.uid === node3.uid;
     });
     if (nodeIndex === -1) {
       return;
@@ -51373,7 +51409,7 @@ var Render = class {
     let existParent = exist.parent;
     let existBorthers = existParent.children;
     let existIndex = existBorthers.findIndex((item) => {
-      return item === exist;
+      return item.uid === exist.uid;
     });
     if (existIndex === -1) {
       return;
@@ -51395,7 +51431,7 @@ var Render = class {
     let nodeParent = node3.parent;
     let nodeBorthers = nodeParent.children;
     let nodeIndex = nodeBorthers.findIndex((item) => {
-      return item === node3;
+      return item.uid === node3.uid;
     });
     if (nodeIndex === -1) {
       return;
@@ -51405,7 +51441,7 @@ var Render = class {
     let existParent = exist.parent;
     let existBorthers = existParent.children;
     let existIndex = existBorthers.findIndex((item) => {
-      return item === exist;
+      return item.uid === exist.uid;
     });
     if (existIndex === -1) {
       return;
@@ -51425,6 +51461,7 @@ var Render = class {
     if (this.activeNodeList.length <= 0 && appointNodes.length <= 0) {
       return;
     }
+    let needActiveNode = null;
     let isAppointNodes = appointNodes.length > 0;
     let list2 = isAppointNodes ? appointNodes : this.activeNodeList;
     let root2 = list2.find((node3) => {
@@ -51438,6 +51475,20 @@ var Render = class {
       root2.children = [];
       root2.nodeData.children = [];
     } else {
+      if (this.activeNodeList.length === 1 && !this.activeNodeList[0].isGeneralization && this.mindMap.opt.deleteNodeActive) {
+        const node3 = this.activeNodeList[0];
+        const broList = node3.parent.children;
+        const nodeIndex = broList.findIndex((item) => item.uid === node3.uid);
+        if (nodeIndex < broList.length - 1) {
+          needActiveNode = broList[nodeIndex + 1];
+        } else {
+          if (nodeIndex > 0) {
+            needActiveNode = broList[nodeIndex - 1];
+          } else {
+            needActiveNode = node3.parent;
+          }
+        }
+      }
       for (let i3 = 0; i3 < list2.length; i3++) {
         let node3 = list2[i3];
         if (isAppointNodes)
@@ -51455,6 +51506,12 @@ var Render = class {
           i3--;
         }
       }
+    }
+    this.activeNodeList = [];
+    if (needActiveNode) {
+      this.activeNodeList.push(needActiveNode);
+      this.setNodeActive(needActiveNode, true);
+      needActiveNode = null;
     }
     this.mindMap.emit("node_active", null, [...this.activeNodeList]);
     this.mindMap.render();
@@ -51670,7 +51727,13 @@ var Render = class {
   }
   //  设置节点图片
   setNodeImage(node3, data2) {
-    const { url, title, width: width2, height: height2, custom = false } = data2 || { url: "", title: "", width: 0, height: 0, custom: false };
+    const {
+      url,
+      title,
+      width: width2,
+      height: height2,
+      custom = false
+    } = data2 || { url: "", title: "", width: 0, height: 0, custom: false };
     this.setNodeDataRender(node3, {
       image: url,
       imageTitle: title || "",
@@ -53401,7 +53464,9 @@ var Command = class {
       this.commands[name].forEach((fn) => {
         fn(...args);
       });
-      if (["BACK", "FORWARD", "SET_NODE_ACTIVE", "CLEAR_ACTIVE_NODE"].includes(name)) {
+      if (["BACK", "FORWARD", "SET_NODE_ACTIVE", "CLEAR_ACTIVE_NODE"].includes(
+        name
+      )) {
         return;
       }
       this.addHistory();
@@ -53479,7 +53544,11 @@ var Command = class {
     let len = this.history.length;
     if (this.activeHistoryIndex + step <= len - 1) {
       this.activeHistoryIndex += step;
-      this.mindMap.emit("back_forward", this.activeHistoryIndex, this.history.length);
+      this.mindMap.emit(
+        "back_forward",
+        this.activeHistoryIndex,
+        this.history.length
+      );
       let data2 = simpleDeepClone(this.history[this.activeHistoryIndex]);
       this.mindMap.emit("data_change", data2);
       return data2;
@@ -53723,12 +53792,22 @@ var defaultOpt = {
   // 节点鼠标hover和激活时显示的矩形边框距节点内容的距离
   hoverRectPadding: 2,
   // 双击节点进入节点文本编辑时是否默认选中文本，默认只在创建新节点时会选中
-  selectTextOnEnterEditText: false
+  selectTextOnEnterEditText: false,
+  // 删除节点后激活相邻节点
+  deleteNodeActive: true,
+  // 拖拽节点时鼠标移动到画布边缘是否开启画布自动移动
+  autoMoveWhenMouseInEdgeOnDrag: true,
+  // 是否首次加载fit view
+  fit: false
 };
 
 // ../simple-mind-map/index.js
 var MindMap2 = class {
   //  构造函数
+  /**
+   *
+   * @param {defaultOpt} opt
+   */
   constructor(opt = {}) {
     this.opt = this.handleOpt((0, import_deepmerge33.default)(defaultOpt, opt));
     this.el = this.opt.el;
@@ -53765,7 +53844,8 @@ var MindMap2 = class {
     MindMap2.pluginList.forEach((plugin) => {
       this.initPlugin(plugin);
     });
-    this.render();
+    this.render(this.opt.fit ? () => this.view.fit() : () => {
+    });
     setTimeout(() => {
       this.command.addHistory();
     }, 0);
@@ -54074,6 +54154,8 @@ var MindMap2 = class {
 };
 MindMap2.pluginList = [];
 MindMap2.usePlugin = (plugin, opt = {}) => {
+  if (MindMap2.hasPlugin(plugin) !== -1)
+    return MindMap2;
   plugin.pluginOpt = opt;
   MindMap2.pluginList.push(plugin);
   return MindMap2;
@@ -54315,7 +54397,10 @@ var Watermark = class {
   }
   // 更新水印
   updateWatermark(config) {
-    this.mindMap.opt.watermarkConfig = (0, import_deepmerge34.default)(this.mindMap.opt.watermarkConfig, config);
+    this.mindMap.opt.watermarkConfig = (0, import_deepmerge34.default)(
+      this.mindMap.opt.watermarkConfig,
+      config
+    );
     this.handleConfig(config);
     this.draw();
   }
@@ -54399,7 +54484,7 @@ var KeyboardNavigation = class {
     checkNodeDis
   }) {
     bfsWalk(this.mindMap.renderer.root, (node3) => {
-      if (node3 === currentActiveNode)
+      if (node3.uid === currentActiveNode.uid)
         return;
       let rect = this.getNodeRect(node3);
       let { left, top, right, bottom } = rect;
@@ -54426,7 +54511,7 @@ var KeyboardNavigation = class {
     checkNodeDis
   }) {
     bfsWalk(this.mindMap.renderer.root, (node3) => {
-      if (node3 === currentActiveNode)
+      if (node3.uid === currentActiveNode.uid)
         return;
       let rect = this.getNodeRect(node3);
       let { left, top, right, bottom } = rect;
@@ -54455,7 +54540,7 @@ var KeyboardNavigation = class {
     let cX = (currentActiveNodeRect.right + currentActiveNodeRect.left) / 2;
     let cY = (currentActiveNodeRect.bottom + currentActiveNodeRect.top) / 2;
     bfsWalk(this.mindMap.renderer.root, (node3) => {
-      if (node3 === currentActiveNode)
+      if (node3.uid === currentActiveNode.uid)
         return;
       let rect = this.getNodeRect(node3);
       let { left, top, right, bottom } = rect;
@@ -54514,7 +54599,7 @@ var KeyboardNavigation_default = KeyboardNavigation;
 var import_jszip = __toESM(require_jszip_min());
 var import_xml_js = __toESM(require_lib());
 var parseXmindFile = (file) => {
-  return new Promise((resolve2, reject) => {
+  return new Promise((resolve, reject) => {
     import_jszip.default.loadAsync(file).then(
       async (zip) => {
         try {
@@ -54530,7 +54615,7 @@ var parseXmindFile = (file) => {
             content3 = transformOldXmind(json);
           }
           if (content3) {
-            resolve2(content3);
+            resolve(content3);
           } else {
             reject(new Error("\u89E3\u6790\u5931\u8D25"));
           }
@@ -54552,7 +54637,7 @@ var transformXmind = async (content3, files) => {
   let walk2 = async (node3, newNode) => {
     newNode.data = {
       // 节点内容
-      text: node3.title
+      text: isUndef(node3.title) ? "" : node3.title
     };
     if (node3.notes) {
       let notesData = node3.notes.realHTML || node3.notes.plain;
@@ -54565,9 +54650,9 @@ var transformXmind = async (content3, files) => {
       newNode.data.tag = node3.labels;
     }
     if (node3.image && /\.(jpg|jpeg|png|gif|webp)$/.test(node3.image.src)) {
-      let resolve2 = null;
+      let resolve = null;
       let promise = new Promise((_resolve) => {
-        resolve2 = _resolve;
+        resolve = _resolve;
       });
       waitLoadImageList.push(promise);
       try {
@@ -54588,10 +54673,10 @@ var transformXmind = async (content3, files) => {
             height: node3.image.height
           };
         }
-        resolve2();
+        resolve();
       } catch (error) {
         console.log(error);
-        resolve2();
+        resolve();
       }
     }
     newNode.children = [];
@@ -54634,9 +54719,10 @@ var transformOldXmind = (content3) => {
   let walk2 = (node3, newNode) => {
     let nodeElements = node3.elements;
     let nodeTitle = getItemByName(nodeElements, "title");
+    nodeTitle = nodeTitle && nodeTitle.elements && nodeTitle.elements[0].text;
     newNode.data = {
       // 节点内容
-      text: nodeTitle && nodeTitle.elements && nodeTitle.elements[0].text
+      text: isUndef(nodeTitle) ? "" : nodeTitle
     };
     try {
       let notesElement = getItemByName(nodeElements, "notes");
@@ -54668,6 +54754,7 @@ var transformOldXmind = (content3) => {
     if (_children && _children.elements && _children.elements.length > 0) {
       _children.elements.forEach((item) => {
         if (item.name === "topics") {
+          ;
           (item.elements || []).forEach((item2) => {
             let newChild = {};
             newNode.children.push(newChild);
@@ -54691,6 +54778,7 @@ var transformToXmind = async (data2, name) => {
   let waitLoadImageList = [];
   let walk2 = async (node3, newNode, isRoot) => {
     let newData = {
+      id: node3.data.uid,
       structureClass: "org.xmind.ui.logic.right",
       title: getTextFromHtml(node3.data.text),
       // 节点文本
@@ -54715,15 +54803,15 @@ var transformToXmind = async (data2, name) => {
       newData.labels = node3.data.tag || [];
     }
     if (node3.data.image) {
+      let resolve = null;
+      let promise = new Promise((_resolve) => {
+        resolve = _resolve;
+      });
+      waitLoadImageList.push(promise);
       try {
-        let resolve2 = null;
-        let promise = new Promise((_resolve) => {
-          resolve2 = _resolve;
-        });
-        waitLoadImageList.push(promise);
         let imgName = "";
         let imgData = node3.data.image;
-        if (/^https?:\/\//.test(node3.data.image)) {
+        if (!/^data:/.test(node3.data.image)) {
           imgData = await imgToDataUrl(node3.data.image);
         }
         let dataUrlRes = parseDataUrl(imgData);
@@ -54737,7 +54825,7 @@ var transformToXmind = async (data2, name) => {
           width: node3.data.imageSize.width,
           height: node3.data.imageSize.height
         };
-        resolve2();
+        resolve();
       } catch (error) {
         console.log(error);
         resolve();
@@ -63768,7 +63856,14 @@ var ExportPDF = class {
         w2 = a4Size.width;
         h3 = a4Size.width / imageRatio;
       }
-      pdf.addImage(img, "PNG", (a4Size.width - w2) / 2, (a4Size.height - h3) / 2, w2, h3);
+      pdf.addImage(
+        img,
+        "PNG",
+        (a4Size.width - w2) / 2,
+        (a4Size.height - h3) / 2,
+        w2,
+        h3
+      );
       pdf.save(name);
     };
     image.src = img;
@@ -64174,13 +64269,16 @@ var Export = class {
   svgToPng(svgSrc, transparent, checkRotate = () => {
     return false;
   }) {
-    return new Promise((resolve2, reject) => {
+    return new Promise((resolve, reject) => {
       const img = new Image();
       img.setAttribute("crossOrigin", "anonymous");
       img.onload = async () => {
         try {
           const canvas = document.createElement("canvas");
-          const dpr = Math.max(window.devicePixelRatio, this.mindMap.opt.minExportImgCanvasScale);
+          const dpr = Math.max(
+            window.devicePixelRatio,
+            this.mindMap.opt.minExportImgCanvasScale
+          );
           const imgWidth = img.width;
           const imgHeight = img.height;
           const needRotate = checkRotate(imgWidth, imgHeight);
@@ -64205,7 +64303,7 @@ var Export = class {
             await this.drawBackgroundToCanvas(ctx, imgWidth, imgHeight);
           }
           ctx.drawImage(img, 0, 0, imgWidth, imgHeight);
-          resolve2(canvas.toDataURL());
+          resolve(canvas.toDataURL());
         } catch (error) {
           reject(error);
         }
@@ -64218,7 +64316,7 @@ var Export = class {
   }
   //  在canvas上绘制思维导图背景
   drawBackgroundToCanvas(ctx, width2, height2) {
-    return new Promise((resolve2, reject) => {
+    return new Promise((resolve, reject) => {
       let {
         backgroundColor = "#fff",
         backgroundImage,
@@ -64247,19 +64345,19 @@ var Export = class {
             if (err) {
               reject(err);
             } else {
-              resolve2();
+              resolve();
             }
             ctx.restore();
           }
         );
       } else {
-        resolve2();
+        resolve();
       }
     });
   }
   //  在svg上绘制思维导图背景
   drawBackgroundToSvg(svg2) {
-    return new Promise(async (resolve2) => {
+    return new Promise(async (resolve) => {
       let {
         backgroundColor = "#fff",
         backgroundImage,
@@ -64270,9 +64368,9 @@ var Export = class {
         let imgDataUrl = await imgToDataUrl(backgroundImage);
         svg2.css("background-image", `url(${imgDataUrl})`);
         svg2.css("background-repeat", backgroundRepeat);
-        resolve2();
+        resolve();
       } else {
-        resolve2();
+        resolve();
       }
     });
   }
@@ -64287,7 +64385,9 @@ var Export = class {
     if (this.mindMap.richText) {
       let foreignObjectList = node3.find("foreignObject");
       if (foreignObjectList.length > 0) {
-        foreignObjectList[0].add(SVG(`<style>${this.mindMap.opt.resetCss}</style>`));
+        foreignObjectList[0].add(
+          SVG(`<style>${this.mindMap.opt.resetCss}</style>`)
+        );
       }
       str = node3.svg();
     }
@@ -64295,11 +64395,7 @@ var Export = class {
       type: "image/svg+xml"
     });
     let svgUrl = await readBlob(blob);
-    let res = await this.svgToPng(
-      svgUrl,
-      transparent,
-      checkRotate
-    );
+    let res = await this.svgToPng(svgUrl, transparent, checkRotate);
     return res;
   }
   //  导出为pdf
@@ -64331,7 +64427,9 @@ var Export = class {
     if (this.mindMap.richText) {
       let foreignObjectList = node3.find("foreignObject");
       if (foreignObjectList.length > 0) {
-        foreignObjectList[0].add(SVG(`<style>${this.mindMap.opt.resetCss}</style>`));
+        foreignObjectList[0].add(
+          SVG(`<style>${this.mindMap.opt.resetCss}</style>`)
+        );
       }
     }
     node3.first().before(SVG(`<title>${name}</title>`));
@@ -64380,6 +64478,7 @@ var Drag = class extends Base_default {
   }
   //  复位
   reset() {
+    this.nodeList = [];
     this.node = null;
     this.overlapNode = null;
     this.prevNode = null;
@@ -64420,6 +64519,7 @@ var Drag = class extends Base_default {
       this.isMousedown = true;
       this.mouseDownX = x3;
       this.mouseDownY = y4;
+      this.nodeTreeToList();
     });
     this.mindMap.on("mousemove", (e2) => {
       if (this.mindMap.opt.readonly) {
@@ -64437,7 +64537,7 @@ var Drag = class extends Base_default {
         return;
       }
       this.mindMap.renderer.clearAllActive();
-      this.onMove(x3, y4);
+      this.onMove(x3, y4, e2);
     });
     this.onMouseup = this.onMouseup.bind(this);
     this.mindMap.on("node_mouseup", this.onMouseup);
@@ -64514,7 +64614,7 @@ var Drag = class extends Base_default {
     this.placeholder.remove();
   }
   //  拖动中
-  onMove(x3, y4) {
+  onMove(x3, y4, e2) {
     if (!this.isMousedown) {
       return;
     }
@@ -64536,99 +64636,297 @@ var Drag = class extends Base_default {
       )
     );
     this.checkOverlapNode();
+    if (this.mindMap.opt.autoMoveWhenMouseInEdgeOnDrag && this.mindMap.select) {
+      this.drawTransform = this.mindMap.draw.transform();
+      this.mindMap.select.clearAutoMoveTimer();
+      this.mindMap.select.onMove(e2.clientX, e2.clientY);
+    }
   }
   //  检测重叠节点
   checkOverlapNode() {
     if (!this.drawTransform || !this.placeholder) {
       return;
     }
-    const { nodeDragPlaceholderMaxSize } = this.mindMap.opt;
-    let x3 = this.mouseMoveX;
-    let y4 = this.mouseMoveY;
     this.overlapNode = null;
     this.prevNode = null;
     this.nextNode = null;
     this.placeholder.size(0, 0);
-    bfsWalk(this.mindMap.renderer.root, (node3) => {
+    this.nodeList.forEach((node3) => {
       if (node3.nodeData.data.isActive) {
         this.mindMap.renderer.setNodeActive(node3, false);
       }
-      if (node3 === this.node || this.node.isParent(node3)) {
+      if (node3.uid === this.node.uid || this.node.isParent(node3)) {
         return;
       }
       if (this.overlapNode || this.prevNode && this.nextNode) {
         return;
       }
-      let nodeRect = this.getNodeRect(node3);
-      let oneFourthHeight = nodeRect.height / 4;
-      let checkList = node3.parent ? node3.parent.children.filter((item) => {
-        return item !== this.node;
-      }) : [];
-      let index3 = checkList.findIndex((item) => {
-        return item === node3;
-      });
-      let prevBrother = null;
-      let nextBrother = null;
-      if (index3 !== -1) {
-        if (index3 - 1 >= 0) {
-          prevBrother = checkList[index3 - 1];
-        }
-        if (index3 + 1 <= checkList.length - 1) {
-          nextBrother = checkList[index3 + 1];
-        }
-      }
-      let prevBrotherOffset = 0;
-      if (prevBrother) {
-        let prevNodeRect = this.getNodeRect(prevBrother);
-        prevBrotherOffset = nodeRect.top - prevNodeRect.bottom;
-        prevBrotherOffset = prevBrotherOffset >= this.minOffset ? prevBrotherOffset / 2 : 0;
-      } else {
-        prevBrotherOffset = this.minOffset;
-      }
-      let nextBrotherOffset = 0;
-      if (nextBrother) {
-        let nextNodeRect = this.getNodeRect(nextBrother);
-        nextBrotherOffset = nextNodeRect.top - nodeRect.bottom;
-        nextBrotherOffset = nextBrotherOffset >= this.minOffset ? nextBrotherOffset / 2 : 0;
-      } else {
-        nextBrotherOffset = this.minOffset;
-      }
-      if (nodeRect.left <= x3 && nodeRect.right >= x3) {
-        if (!this.overlapNode && !this.prevNode && !this.nextNode && !node3.isRoot) {
-          let checkIsPrevNode = nextBrotherOffset > 0 ? (
-            // 距离下一个兄弟节点的距离大于0
-            y4 > nodeRect.bottom && y4 <= nodeRect.bottom + nextBrotherOffset
-          ) : (
-            // 那么在当前节点外底部判断
-            y4 >= nodeRect.bottom - oneFourthHeight && y4 <= nodeRect.bottom
-          );
-          let checkIsNextNode = prevBrotherOffset > 0 ? (
-            // 距离上一个兄弟节点的距离大于0
-            y4 < nodeRect.top && y4 >= nodeRect.top - prevBrotherOffset
-          ) : (
-            // 那么在当前节点外底部判断
-            y4 >= nodeRect.top && y4 <= nodeRect.top + oneFourthHeight
-          );
-          if (checkIsPrevNode) {
-            this.prevNode = node3;
-            let size2 = nextBrotherOffset > 0 ? Math.min(nextBrotherOffset, nodeDragPlaceholderMaxSize) : 5;
-            this.placeholder.size(node3.width, size2).move(nodeRect.originLeft, nodeRect.originBottom);
-          } else if (checkIsNextNode) {
-            this.nextNode = node3;
-            let size2 = prevBrotherOffset > 0 ? Math.min(prevBrotherOffset, nodeDragPlaceholderMaxSize) : 5;
-            this.placeholder.size(node3.width, size2).move(nodeRect.originLeft, nodeRect.originTop - size2);
-          }
-        }
-        if (!this.overlapNode && !this.prevNode && !this.nextNode) {
-          if (nodeRect.top + (prevBrotherOffset > 0 ? 0 : oneFourthHeight) <= y4 && nodeRect.bottom - (nextBrotherOffset > 0 ? 0 : oneFourthHeight) >= y4) {
-            this.overlapNode = node3;
-          }
-        }
+      switch (this.mindMap.opt.layout) {
+        case "logicalStructure":
+          this.handleLogicalStructure(node3);
+          break;
+        case "mindMap":
+          this.handleMindMap(node3);
+          break;
+        case "organizationStructure":
+          this.handleOrganizationStructure(node3);
+          break;
+        case "catalogOrganization":
+          this.handleCatalogOrganization(node3);
+          break;
+        case "timeline":
+          this.handleTimeLine(node3);
+          break;
+        case "timeline2":
+          this.handleTimeLine2(node3);
+          break;
+        case "verticalTimeline":
+          this.handleLogicalStructure(node3);
+          break;
+        case "fishbone":
+          this.handleFishbone(node3);
+          break;
+        default:
+          this.handleLogicalStructure(node3);
       }
     });
     if (this.overlapNode) {
       this.mindMap.renderer.setNodeActive(this.overlapNode, true);
     }
+  }
+  // 垂直方向比较
+  // isReverse：是否反向
+  handleVerticalCheck(node3, checkList, isReverse = false) {
+    let x3 = this.mouseMoveX;
+    let y4 = this.mouseMoveY;
+    let nodeRect = this.getNodeRect(node3);
+    if (isReverse) {
+      checkList = checkList.reverse();
+    }
+    let oneFourthHeight = nodeRect.height / 4;
+    let { prevBrotherOffset, nextBrotherOffset } = this.getNodeDistanceToSiblingNode(checkList, node3, nodeRect, "v");
+    if (nodeRect.left <= x3 && nodeRect.right >= x3) {
+      if (!this.overlapNode && !this.prevNode && !this.nextNode && !node3.isRoot) {
+        let checkIsPrevNode = nextBrotherOffset > 0 ? y4 > nodeRect.bottom && y4 <= nodeRect.bottom + nextBrotherOffset : y4 >= nodeRect.bottom - oneFourthHeight && y4 <= nodeRect.bottom;
+        let checkIsNextNode = prevBrotherOffset > 0 ? y4 < nodeRect.top && y4 >= nodeRect.top - prevBrotherOffset : y4 >= nodeRect.top && y4 <= nodeRect.top + oneFourthHeight;
+        if (checkIsPrevNode) {
+          if (isReverse) {
+            this.nextNode = node3;
+          } else {
+            this.prevNode = node3;
+          }
+          let size2 = this.formatPlaceholderSize(nextBrotherOffset);
+          this.setPlaceholderRect(
+            node3.width,
+            size2,
+            nodeRect.originLeft,
+            nodeRect.originBottom
+          );
+        } else if (checkIsNextNode) {
+          if (isReverse) {
+            this.prevNode = node3;
+          } else {
+            this.nextNode = node3;
+          }
+          let size2 = this.formatPlaceholderSize(prevBrotherOffset);
+          this.setPlaceholderRect(
+            node3.width,
+            size2,
+            nodeRect.originLeft,
+            nodeRect.originTop - size2
+          );
+        }
+      }
+      this.checkIsOverlap({
+        node: node3,
+        dir: "v",
+        prevBrotherOffset,
+        nextBrotherOffset,
+        size: oneFourthHeight,
+        pos: y4,
+        nodeRect
+      });
+    }
+  }
+  // 水平方向比较
+  handleHorizontalCheck(node3, checkList) {
+    let x3 = this.mouseMoveX;
+    let y4 = this.mouseMoveY;
+    let nodeRect = this.getNodeRect(node3);
+    let oneFourthWidth = nodeRect.width / 4;
+    let { prevBrotherOffset, nextBrotherOffset } = this.getNodeDistanceToSiblingNode(checkList, node3, nodeRect, "h");
+    if (nodeRect.top <= y4 && nodeRect.bottom >= y4) {
+      if (!this.overlapNode && !this.prevNode && !this.nextNode && !node3.isRoot) {
+        let checkIsPrevNode = nextBrotherOffset > 0 ? x3 < nodeRect.right + nextBrotherOffset && x3 >= nodeRect.right : x3 <= nodeRect.right && x3 >= nodeRect.right - oneFourthWidth;
+        let checkIsNextNode = prevBrotherOffset > 0 ? x3 > nodeRect.left - prevBrotherOffset && x3 <= nodeRect.left : x3 <= nodeRect.left + oneFourthWidth && x3 >= nodeRect.left;
+        if (checkIsPrevNode) {
+          this.prevNode = node3;
+          let size2 = this.formatPlaceholderSize(nextBrotherOffset);
+          this.setPlaceholderRect(
+            size2,
+            node3.height,
+            nodeRect.originRight,
+            nodeRect.originTop
+          );
+        } else if (checkIsNextNode) {
+          this.nextNode = node3;
+          let size2 = this.formatPlaceholderSize(prevBrotherOffset);
+          this.setPlaceholderRect(
+            size2,
+            node3.height,
+            nodeRect.originLeft - size2,
+            nodeRect.originTop
+          );
+        }
+      }
+      this.checkIsOverlap({
+        node: node3,
+        dir: "h",
+        prevBrotherOffset,
+        nextBrotherOffset,
+        size: oneFourthWidth,
+        pos: x3,
+        nodeRect
+      });
+    }
+  }
+  // 获取节点距前一个和后一个节点的距离
+  getNodeDistanceToSiblingNode(checkList, node3, nodeRect, dir) {
+    let dir1 = dir === "v" ? "top" : "left";
+    let dir2 = dir === "v" ? "bottom" : "right";
+    let index3 = checkList.findIndex((item) => {
+      return item.uid === node3.uid;
+    });
+    let prevBrother = null;
+    let nextBrother = null;
+    if (index3 !== -1) {
+      if (index3 - 1 >= 0) {
+        prevBrother = checkList[index3 - 1];
+      }
+      if (index3 + 1 <= checkList.length - 1) {
+        nextBrother = checkList[index3 + 1];
+      }
+    }
+    let prevBrotherOffset = 0;
+    if (prevBrother) {
+      let prevNodeRect = this.getNodeRect(prevBrother);
+      prevBrotherOffset = nodeRect[dir1] - prevNodeRect[dir2];
+      prevBrotherOffset = prevBrotherOffset >= this.minOffset ? prevBrotherOffset / 2 : 0;
+    } else {
+      prevBrotherOffset = this.minOffset;
+    }
+    let nextBrotherOffset = 0;
+    if (nextBrother) {
+      let nextNodeRect = this.getNodeRect(nextBrother);
+      nextBrotherOffset = nextNodeRect[dir1] - nodeRect[dir2];
+      nextBrotherOffset = nextBrotherOffset >= this.minOffset ? nextBrotherOffset / 2 : 0;
+    } else {
+      nextBrotherOffset = this.minOffset;
+    }
+    return {
+      prevBrotherOffset,
+      nextBrotherOffset
+    };
+  }
+  // 处理提示元素的大小
+  formatPlaceholderSize(size2) {
+    const { nodeDragPlaceholderMaxSize } = this.mindMap.opt;
+    return size2 > 0 ? Math.min(size2, nodeDragPlaceholderMaxSize) : 5;
+  }
+  // 设置提示元素的大小和位置
+  setPlaceholderRect(w2, h3, x3, y4) {
+    this.placeholder.size(w2, h3).move(x3, y4);
+  }
+  // 检测是否重叠
+  checkIsOverlap({
+    node: node3,
+    dir,
+    prevBrotherOffset,
+    nextBrotherOffset,
+    size: size2,
+    pos,
+    nodeRect
+  }) {
+    let dir1 = dir === "v" ? "top" : "left";
+    let dir2 = dir === "v" ? "bottom" : "right";
+    if (!this.overlapNode && !this.prevNode && !this.nextNode) {
+      if (nodeRect[dir1] + (prevBrotherOffset > 0 ? 0 : size2) <= pos && nodeRect[dir2] - (nextBrotherOffset > 0 ? 0 : size2) >= pos) {
+        this.overlapNode = node3;
+      }
+    }
+  }
+  // 处理逻辑结构图
+  handleLogicalStructure(node3) {
+    const checkList = this.commonGetNodeCheckList(node3);
+    this.handleVerticalCheck(node3, checkList);
+  }
+  // 处理思维导图
+  handleMindMap(node3) {
+    const checkList = node3.parent ? node3.parent.children.filter((item) => {
+      let sameDir = true;
+      if (node3.layerIndex === 1) {
+        sameDir = item.dir === node3.dir;
+      }
+      return item !== this.node && sameDir;
+    }) : [];
+    this.handleVerticalCheck(node3, checkList);
+  }
+  // 处理组织结构图
+  handleOrganizationStructure(node3) {
+    const checkList = this.commonGetNodeCheckList(node3);
+    this.handleHorizontalCheck(node3, checkList);
+  }
+  // 处理目录组织图
+  handleCatalogOrganization(node3) {
+    const checkList = this.commonGetNodeCheckList(node3);
+    if (node3.layerIndex === 1) {
+      this.handleHorizontalCheck(node3, checkList);
+    } else {
+      this.handleVerticalCheck(node3, checkList);
+    }
+  }
+  // 处理时间轴
+  handleTimeLine(node3) {
+    let checkList = this.commonGetNodeCheckList(node3);
+    if (node3.layerIndex === 1) {
+      this.handleHorizontalCheck(node3, checkList);
+    } else {
+      this.handleVerticalCheck(node3, checkList);
+    }
+  }
+  // 处理时间轴2
+  handleTimeLine2(node3) {
+    let checkList = this.commonGetNodeCheckList(node3);
+    if (node3.layerIndex === 1) {
+      this.handleHorizontalCheck(node3, checkList);
+    } else {
+      if (node3.dir === "top" && node3.layerIndex === 2) {
+        this.handleVerticalCheck(node3, checkList, true);
+      } else {
+        this.handleVerticalCheck(node3, checkList);
+      }
+    }
+  }
+  // 处理鱼骨图
+  handleFishbone(node3) {
+    let checkList = node3.parent ? node3.parent.children.filter((item) => {
+      return item !== this.node && item.layerIndex > 1;
+    }) : [];
+    if (node3.layerIndex === 1) {
+      this.handleHorizontalCheck(node3, checkList);
+    } else {
+      if (node3.dir === "top" && node3.layerIndex === 2) {
+        this.handleVerticalCheck(node3, checkList, true);
+      } else {
+        this.handleVerticalCheck(node3, checkList);
+      }
+    }
+  }
+  // 获取节点的兄弟节点列表通用方法
+  commonGetNodeCheckList(node3) {
+    return node3.parent ? node3.parent.children.filter((item) => {
+      return item !== this.node;
+    }) : [];
   }
   // 计算节点的位置尺寸信息
   getNodeRect(node3) {
@@ -64637,6 +64935,7 @@ var Drag = class extends Base_default {
     let originLeft = left;
     let originTop = top;
     let originBottom = top + height2;
+    let originRight = left + width2;
     let right = (left + width2) * scaleX + translateX;
     let bottom = (top + height2) * scaleY + translateY;
     left = left * scaleX + translateX;
@@ -64650,8 +64949,22 @@ var Drag = class extends Base_default {
       bottom,
       originLeft,
       originTop,
-      originBottom
+      originBottom,
+      originRight
     };
+  }
+  // 节点由树转换成数组，从子节点到根节点
+  nodeTreeToList() {
+    const list2 = [];
+    bfsWalk(this.mindMap.renderer.root, (node3) => {
+      if (!list2[node3.layerIndex]) {
+        list2[node3.layerIndex] = [];
+      }
+      list2[node3.layerIndex].push(node3);
+    });
+    this.nodeList = list2.reduceRight((res, cur) => {
+      return [...res, ...cur];
+    }, []);
   }
 };
 Drag.instanceName = "drag";
@@ -64704,8 +65017,39 @@ var Select = class {
       if (Math.abs(x3 - this.mouseDownX) <= 10 && Math.abs(y4 - this.mouseDownY) <= 10) {
         return;
       }
-      clearTimeout(this.autoMoveTimer);
-      this.onMove(x3, y4);
+      this.clearAutoMoveTimer();
+      this.onMove(
+        e2.clientX,
+        e2.clientY,
+        () => {
+          this.isSelecting = true;
+          this.rect.plot([
+            [this.mouseDownX, this.mouseDownY],
+            [this.mouseMoveX, this.mouseDownY],
+            [this.mouseMoveX, this.mouseMoveY],
+            [this.mouseDownX, this.mouseMoveY]
+          ]);
+          this.checkInNodes();
+        },
+        (dir, step) => {
+          switch (dir) {
+            case "left":
+              this.mouseDownX += step;
+              break;
+            case "top":
+              this.mouseDownY += step;
+              break;
+            case "right":
+              this.mouseDownX -= step;
+              break;
+            case "bottom":
+              this.mouseDownY -= step;
+              break;
+            default:
+              break;
+          }
+        }
+      );
     });
     this.mindMap.on("mouseup", () => {
       if (this.mindMap.opt.readonly) {
@@ -64742,55 +65086,52 @@ var Select = class {
       }
     }
     if (isNumChange || isNodeChange) {
-      this.mindMap.emit(
-        "node_active",
-        null,
-        [...this.mindMap.renderer.activeNodeList]
-      );
+      this.mindMap.emit("node_active", null, [
+        ...this.mindMap.renderer.activeNodeList
+      ]);
     }
   }
   //  鼠标移动事件
-  onMove(x3, y4) {
-    this.isSelecting = true;
-    this.rect.plot([
-      [this.mouseDownX, this.mouseDownY],
-      [this.mouseMoveX, this.mouseDownY],
-      [this.mouseMoveX, this.mouseMoveY],
-      [this.mouseDownX, this.mouseMoveY]
-    ]);
-    this.checkInNodes();
+  onMove(x3, y4, callback = () => {
+  }, handle = () => {
+  }) {
+    callback();
     let step = this.mindMap.opt.selectTranslateStep;
     let limit = this.mindMap.opt.selectTranslateLimit;
     let count = 0;
     if (x3 <= this.mindMap.elRect.left + limit) {
-      this.mouseDownX += step;
+      handle("left", step);
       this.mindMap.view.translateX(step);
       count++;
     }
     if (x3 >= this.mindMap.elRect.right - limit) {
-      this.mouseDownX -= step;
+      handle("right", step);
       this.mindMap.view.translateX(-step);
       count++;
     }
     if (y4 <= this.mindMap.elRect.top + limit) {
-      this.mouseDownY += step;
+      handle("top", step);
       this.mindMap.view.translateY(step);
       count++;
     }
     if (y4 >= this.mindMap.elRect.bottom - limit) {
-      this.mouseDownY -= step;
+      handle("bottom", step);
       this.mindMap.view.translateY(-step);
       count++;
     }
     if (count > 0) {
-      this.startAutoMove(x3, y4);
+      this.startAutoMove(x3, y4, callback, handle);
     }
   }
   //  开启自动移动
-  startAutoMove(x3, y4) {
+  startAutoMove(x3, y4, callback, handle) {
     this.autoMoveTimer = setTimeout(() => {
-      this.onMove(x3, y4);
+      this.onMove(x3, y4, callback, handle);
     }, 20);
+  }
+  // 清除自动移动定时器
+  clearAutoMoveTimer() {
+    clearTimeout(this.autoMoveTimer);
   }
   //  创建矩形
   createRect(x3, y4) {
@@ -65402,10 +65743,7 @@ function getText2(node3, toNode) {
 function renderText(str, path, text3) {
   if (!str)
     return;
-  let {
-    associativeLineTextFontSize,
-    associativeLineTextLineHeight
-  } = this.mindMap.themeConfig;
+  let { associativeLineTextFontSize, associativeLineTextLineHeight } = this.mindMap.themeConfig;
   text3.clear();
   let textArr = str.split(/\n/gim);
   textArr.forEach((item, index3) => {
@@ -65745,7 +66083,7 @@ var AssociativeLine = class {
       if (node3.nodeData.data.isActive) {
         this.mindMap.renderer.setNodeActive(node3, false);
       }
-      if (node3 === this.creatingStartNode || this.overlapNode) {
+      if (node3.uid === this.creatingStartNode.uid || this.overlapNode) {
         return;
       }
       let { left, top, width: width2, height: height2 } = node3;
@@ -65761,7 +66099,7 @@ var AssociativeLine = class {
   }
   // 完成创建连接线
   completeCreateLine(node3) {
-    if (this.creatingStartNode === node3)
+    if (this.creatingStartNode.uid === node3.uid)
       return;
     this.addLine(this.creatingStartNode, node3);
     if (this.overlapNode && this.overlapNode.nodeData.data.isActive) {
@@ -65809,7 +66147,7 @@ var AssociativeLine = class {
       }
     ];
     let associativeLinePoint = fromNode.nodeData.data.associativeLinePoint || [];
-    associativeLinePoint[list2.length - 1] = [{ startPoint, endPoint }];
+    associativeLinePoint[list2.length - 1] = { startPoint, endPoint };
     this.mindMap.execCommand("SET_NODE_DATA", fromNode, {
       associativeLineTargets: list2,
       associativeLineTargetControlOffsets: offsetList,
@@ -66108,7 +66446,9 @@ var RichText = class {
     this.initQuillEditor();
     document.querySelector(".ql-editor").style.minHeight = originHeight + "px";
     this.showTextEdit = true;
-    this.focus(isInserting || selectTextOnEnterEditText && !isFromKeyDown ? 0 : null);
+    this.focus(
+      isInserting || selectTextOnEnterEditText && !isFromKeyDown ? 0 : null
+    );
     if (!node3.nodeData.data.richText) {
       this.setTextStyleIfNotRichText(node3);
     }
@@ -66502,7 +66842,7 @@ var NodeImgAdjust = class {
   onNodeImgMousemove(node3, img) {
     if (this.isMousedown || this.isAdjusted || this.mindMap.opt.readonly)
       return;
-    if (this.node === node3 && this.isShowHandleEl)
+    if (this.node && this.node.uid === node3.uid && this.isShowHandleEl)
       return;
     this.node = node3;
     this.img = img;
@@ -67031,12 +67371,12 @@ var Painter = class {
   }
   // 格式刷某个节点
   painterOneNode(node3) {
-    if (!node3 || !this.isInPainter || !this.painterNode || !node3 || node3 === this.painterNode)
+    if (!node3 || !this.isInPainter || !this.painterNode || !node3 || node3.uid === this.painterNode.uid)
       return;
     const style = {};
     const painterNodeData = this.painterNode.nodeData.data;
     Object.keys(painterNodeData).forEach((key) => {
-      if (!nodeDataNoStylePropList.includes(key)) {
+      if (checkIsNodeStyleDataKey(key)) {
         style[key] = painterNodeData[key];
       }
     });
@@ -67068,38 +67408,10 @@ var Scrollbar = class {
       height: 0
       // 垂直滚动条的容器高度
     };
+    this.chartHeight = 0;
+    this.chartWidth = 0;
     this.reset();
     this.bindEvent();
-  }
-  // 绑定事件
-  bindEvent() {
-    this.onMousemove = this.onMousemove.bind(this);
-    this.onMouseup = this.onMouseup.bind(this);
-    this.onNodeTreeRenderEnd = this.onNodeTreeRenderEnd.bind(this);
-    this.onViewDataChange = throttle(this.onViewDataChange, 16, this);
-    this.mindMap.on("mousemove", this.onMousemove);
-    this.mindMap.on("mouseup", this.onMouseup);
-    this.mindMap.on("node_tree_render_end", this.onNodeTreeRenderEnd);
-    this.mindMap.on("view_data_change", this.onViewDataChange);
-  }
-  // 解绑事件
-  unBindEvent() {
-    this.mindMap.off("mousemove", this.onMousemove);
-    this.mindMap.off("mouseup", this.onMouseup);
-    this.mindMap.off("node_tree_render_end", this.onNodeTreeRenderEnd);
-    this.mindMap.off("view_data_change", this.onViewDataChange);
-  }
-  // 每次渲染后需要更新滚动条
-  onNodeTreeRenderEnd() {
-    this.emitEvent();
-  }
-  // 思维导图视图数据改变需要更新滚动条
-  onViewDataChange() {
-    this.emitEvent();
-  }
-  // 发送滚动条改变事件
-  emitEvent() {
-    this.mindMap.emit("scrollbar_change");
   }
   // 复位数据
   reset() {
@@ -67109,12 +67421,36 @@ var Scrollbar = class {
       x: 0,
       y: 0
     };
-    this.startViewPos = {
-      x: 0,
-      y: 0
-    };
-    this.chartHeight = 0;
-    this.chartWidth = 0;
+    this.mousedownScrollbarPos = 0;
+  }
+  // 绑定事件
+  bindEvent() {
+    this.onMousemove = this.onMousemove.bind(this);
+    this.onMouseup = this.onMouseup.bind(this);
+    this.updateScrollbar = this.updateScrollbar.bind(this);
+    this.updateScrollbar = throttle(this.updateScrollbar, 16, this);
+    this.mindMap.on("mousemove", this.onMousemove);
+    this.mindMap.on("mouseup", this.onMouseup);
+    this.mindMap.on("node_tree_render_end", this.updateScrollbar);
+    this.mindMap.on("view_data_change", this.updateScrollbar);
+  }
+  // 解绑事件
+  unBindEvent() {
+    this.mindMap.off("mousemove", this.onMousemove);
+    this.mindMap.off("mouseup", this.onMouseup);
+    this.mindMap.off("node_tree_render_end", this.updateScrollbar);
+    this.mindMap.off("view_data_change", this.updateScrollbar);
+  }
+  // 渲染后、数据改变需要更新滚动条
+  updateScrollbar() {
+    if (this.isMousedown)
+      return;
+    const res = this.calculationScrollbar();
+    this.emitEvent(res);
+  }
+  // 发送滚动条改变事件
+  emitEvent(data2) {
+    this.mindMap.emit("scrollbar_change", data2);
   }
   // 设置滚动条容器的大小，指滚动条容器的大小，对于水平滚动条，即宽度，对于垂直滚动条，即高度
   setScrollBarWrapSize(width2, height2) {
@@ -67126,9 +67462,7 @@ var Scrollbar = class {
     const rect = this.mindMap.draw.rbox();
     const elRect = this.mindMap.elRect;
     rect.x -= elRect.left;
-    rect.x2 -= elRect.left;
     rect.y -= elRect.top;
-    rect.y2 -= elRect.top;
     const canvasHeight = this.mindMap.height;
     const paddingY = canvasHeight / 2;
     const chartHeight = rect.height + paddingY * 2;
@@ -67169,39 +67503,104 @@ var Scrollbar = class {
     };
     return res;
   }
+  // 滚动条鼠标按下事件处理函数
   onMousedown(e2, type) {
     e2.preventDefault();
+    e2.stopPropagation();
     this.currentScrollType = type;
     this.isMousedown = true;
     this.mousedownPos = {
       x: e2.clientX,
       y: e2.clientY
     };
-    let transformData = this.mindMap.view.getTransformData();
-    this.startViewPos = {
-      x: transformData.state.x,
-      y: transformData.state.y
-    };
+    const styles = window.getComputedStyle(e2.target);
+    if (type === CONSTANTS.SCROLL_BAR_DIR.VERTICAL) {
+      this.mousedownScrollbarPos = Number.parseFloat(styles.top);
+    } else {
+      this.mousedownScrollbarPos = Number.parseFloat(styles.left);
+    }
   }
+  // 鼠标移动事件处理函数
   onMousemove(e2) {
     if (!this.isMousedown) {
       return;
     }
-    if (this.currentScrollType === "vertical") {
-      const oy = e2.clientY - this.mousedownPos.y;
-      const oyPercentage = -oy / this.scrollbarWrapSize.height;
-      const oyPx = oyPercentage * this.chartHeight;
-      this.mindMap.view.translateYTo(oyPx + this.startViewPos.y);
+    e2.preventDefault();
+    e2.stopPropagation();
+    if (this.currentScrollType === CONSTANTS.SCROLL_BAR_DIR.VERTICAL) {
+      const oy = e2.clientY - this.mousedownPos.y + this.mousedownScrollbarPos;
+      this.updateMindMapView(CONSTANTS.SCROLL_BAR_DIR.VERTICAL, oy);
     } else {
-      const ox = e2.clientX - this.mousedownPos.x;
-      const oxPercentage = -ox / this.scrollbarWrapSize.width;
-      const oxPx = oxPercentage * this.chartWidth;
-      this.mindMap.view.translateXTo(oxPx + this.startViewPos.x);
+      const ox = e2.clientX - this.mousedownPos.x + this.mousedownScrollbarPos;
+      this.updateMindMapView(CONSTANTS.SCROLL_BAR_DIR.HORIZONTAL, ox);
     }
   }
+  // 鼠标松开事件处理函数
   onMouseup() {
     this.isMousedown = false;
     this.reset();
+  }
+  // 更新视图
+  updateMindMapView(type, offset) {
+    const scrollbarData = this.calculationScrollbar();
+    const t3 = this.mindMap.draw.transform();
+    const drawRect = this.mindMap.draw.rbox();
+    const rootRect = this.mindMap.renderer.root.group.rbox();
+    if (type === CONSTANTS.SCROLL_BAR_DIR.VERTICAL) {
+      let oy = offset;
+      if (oy <= 0) {
+        oy = 0;
+      }
+      let max3 = (100 - scrollbarData.vertical.height) / 100 * this.scrollbarWrapSize.height;
+      if (oy >= max3) {
+        oy = max3;
+      }
+      const oyPercentage = oy / this.scrollbarWrapSize.height * 100;
+      const oyPx = -oyPercentage / 100 * this.chartHeight;
+      const yOffset = rootRect.y - drawRect.y;
+      const paddingY = this.mindMap.height / 2;
+      let chartTop = oyPx + yOffset - paddingY * t3.scaleY + paddingY;
+      this.mindMap.view.translateYTo(chartTop);
+      this.emitEvent({
+        horizontal: scrollbarData.horizontal,
+        vertical: {
+          top: oyPercentage,
+          height: scrollbarData.vertical.height
+        }
+      });
+    } else {
+      let ox = offset;
+      if (ox <= 0) {
+        ox = 0;
+      }
+      let max3 = (100 - scrollbarData.horizontal.width) / 100 * this.scrollbarWrapSize.width;
+      if (ox >= max3) {
+        ox = max3;
+      }
+      const oxPercentage = ox / this.scrollbarWrapSize.width * 100;
+      const oxPx = -oxPercentage / 100 * this.chartWidth;
+      const xOffset = rootRect.x - drawRect.x;
+      const paddingX = this.mindMap.width / 2;
+      let chartLeft = oxPx + xOffset - paddingX * t3.scaleX + paddingX;
+      this.mindMap.view.translateXTo(chartLeft);
+      this.emitEvent({
+        vertical: scrollbarData.vertical,
+        horizontal: {
+          left: oxPercentage,
+          width: scrollbarData.horizontal.width
+        }
+      });
+    }
+  }
+  // 滚动条的点击事件
+  onClick(e2, type) {
+    let offset = 0;
+    if (type === CONSTANTS.SCROLL_BAR_DIR.VERTICAL) {
+      offset = e2.clientY - e2.currentTarget.getBoundingClientRect().top;
+    } else {
+      offset = e2.clientX - e2.currentTarget.getBoundingClientRect().left;
+    }
+    this.updateMindMapView(type, offset);
   }
   // 插件被卸载前做的事情
   beforePluginDestroy() {
@@ -67645,10 +68044,10 @@ function resolveAll(constructs2, events, context) {
   const called = [];
   let index3 = -1;
   while (++index3 < constructs2.length) {
-    const resolve2 = constructs2[index3].resolveAll;
-    if (resolve2 && !called.includes(resolve2)) {
-      events = resolve2(events, context);
-      called.push(resolve2);
+    const resolve = constructs2[index3].resolveAll;
+    if (resolve && !called.includes(resolve)) {
+      events = resolve(events, context);
+      called.push(resolve);
     }
   }
   return events;

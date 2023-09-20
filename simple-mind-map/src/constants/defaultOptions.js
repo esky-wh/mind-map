@@ -185,4 +185,8 @@ export const defaultOpt = {
   selectTextOnEnterEditText: false,
   // 删除节点后激活相邻节点
   deleteNodeActive: true,
+  // 拖拽节点时鼠标移动到画布边缘是否开启画布自动移动
+  autoMoveWhenMouseInEdgeOnDrag: true,
+  // 是否首次加载fit view
+  fit: false
 }

@@ -92,7 +92,7 @@ class Drag extends Base {
         return
       }
       this.mindMap.renderer.clearAllActive()
-      this.onMove(x, y)
+      this.onMove(x, y, e)
     })
     this.onMouseup = this.onMouseup.bind(this)
     this.mindMap.on('node_mouseup', this.onMouseup)
@@ -182,7 +182,7 @@ class Drag extends Base {
   }
 
   //  拖动中
-  onMove(x, y) {
+  onMove(x, y, e) {
     if (!this.isMousedown) {
       return
     }
@@ -205,6 +205,12 @@ class Drag extends Base {
       )
     )
     this.checkOverlapNode()
+    // 如果注册了多选节点插件，那么复用它的边缘自动移动画布功能
+    if (this.mindMap.opt.autoMoveWhenMouseInEdgeOnDrag && this.mindMap.select) {
+      this.drawTransform = this.mindMap.draw.transform()
+      this.mindMap.select.clearAutoMoveTimer()
+      this.mindMap.select.onMove(e.clientX, e.clientY)
+    }
   }
 
   //  检测重叠节点
@@ -220,7 +226,7 @@ class Drag extends Base {
       if (node.nodeData.data.isActive) {
         this.mindMap.renderer.setNodeActive(node, false)
       }
-      if (node.uid === this.node.uid) {
+      if (node.uid === this.node.uid || this.node.isParent(node)) {
         return
       }
       if (this.overlapNode || (this.prevNode && this.nextNode)) {
