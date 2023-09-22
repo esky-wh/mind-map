@@ -202,6 +202,6 @@ export const defaultOpt = {
     cloneNodeOpacity: 0.5, // 跟随鼠标移动的克隆节点或矩形的透明度
     beingDragNodeOpacity: 0.3 // 被拖拽节点的透明度
   },
-  //   是否显示添加子节点按钮
-  isShowAddNodeBtn: true
+  //   是否显示添加子节点和同级节点按钮
+  isShowAddNodeBtn: true,
 }

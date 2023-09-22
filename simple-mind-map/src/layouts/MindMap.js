@@ -340,25 +340,43 @@ class MindMap extends Base {
   }
 
   //  渲染按钮
-  renderExpandBtn(node, btn) {
+  renderExpandBtn(node, btn, add) {
     let { width, height, expandBtnSize } = node
     let { translateX, translateY } = btn.transform()
-    // 节点使用横线风格，需要调整展开收起按钮位置
-    let nodeUseLineStyleOffset = this.mindMap.themeConfig.nodeUseLineStyle
-      ? height / 2
-      : 0
-    // 位置没有变化则返回
-    let _x =
-      node.dir === CONSTANTS.LAYOUT_GROW_DIR.LEFT ? 0 - expandBtnSize : width
-    let _y = height / 2 + nodeUseLineStyleOffset
-    if (_x === translateX && _y === translateY) {
-      return
+    if (add) {
+      // 节点使用横线风格，需要调整展开收起按钮位置
+      let nodeUseLineStyleOffset = this.mindMap.themeConfig.nodeUseLineStyle
+        ? width / 2
+        : 0
+      // 位置没有变化则返回
+      let _x =
+        nodeUseLineStyleOffset + node.dir === CONSTANTS.LAYOUT_GROW_DIR.LEFT
+          ? (0 - expandBtnSize) / 2
+          : width / 2
+      let _y = height
+      if (_x === translateX && _y === translateY) {
+        return
+      }
+      let x = _x - translateX
+      let y = _y - translateY
+      btn.translate(x, y)
+    } else {
+      // 节点使用横线风格，需要调整展开收起按钮位置
+      let nodeUseLineStyleOffset = this.mindMap.themeConfig.nodeUseLineStyle
+        ? height / 2
+        : 0
+      // 位置没有变化则返回
+      let _x =
+        node.dir === CONSTANTS.LAYOUT_GROW_DIR.LEFT ? 0 - expandBtnSize : width
+      let _y = height / 2 + nodeUseLineStyleOffset
+      if (_x === translateX && _y === translateY) {
+        return
+      }
+      let x = _x - translateX
+      let y = _y - translateY
+      btn.translate(x, y)
     }
-    let x = _x - translateX
-    let y = _y - translateY
-    btn.translate(x, y)
   }
-
   //  创建概要节点
   renderGeneralization(node, gLine, gNode) {
     let isLeft = node.dir === CONSTANTS.LAYOUT_GROW_DIR.LEFT

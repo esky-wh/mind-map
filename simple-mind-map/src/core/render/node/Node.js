@@ -69,11 +69,13 @@ class Node {
     this._noteData = null
     this.noteEl = null
     this._expandBtn = null
+    this._nodeBtn = null
     this._lastExpandBtnType = null
     this._showExpandBtn = false
     this._openExpandNode = null
     this._closeExpandNode = null
-    this._addChildNodeExpan = null
+    this._addChildNodeBtn = null
+    this._addNodeBtn = null
     this._fillExpandNode = null
     this._lines = []
     this._generalizationLine = null
@@ -401,6 +403,12 @@ class Node {
       ) {
         this.showExpandBtn()
       }
+      // 显示添加同级节点按钮
+      if (
+        this.mindMap.renderer.activeNodeList.length <= 1
+      ) {
+        this.showNodeBtn()
+      }
     })
     this.group.on('mousedown', e => {
       const {
@@ -533,16 +541,17 @@ class Node {
       if (expand && !isActive && !this._isMouseenter) {
         this.hideExpandBtn()
       } else {
-        // 如果激活节点大于0且当前节点没有子节点不显示添加子节点按钮
-        if (
-          this.mindMap.renderer.activeNodeList.length > 1 &&
-          this.nodeData.children.length <= 0
-        ) {
+        if (this.renderer.activeNodeList.length > 1) {
+          // 如果激活节点大于1隐藏添加节点按钮
           this.hideExpandBtn()
         } else {
           this.showExpandBtn()
         }
       }
+    }
+    // 节点更新判断是否显示添加同级节点按钮
+    if (!this._nodeBtn && this.nodeData.data.isActive) {
+      this.showNodeBtn()
     }
     // 更新概要
     this.renderGeneralization()

@@ -9,18 +9,33 @@ export default {
       translateX,
       translateY,
       width,
-      height
+      height,
+      add
     }) {
       if (node.parent && node.parent.isRoot) {
-        btn.translate(
-          width * 0.3 - expandBtnSize / 2 - translateX,
-          -expandBtnSize / 2 - translateY
-        )
+        if (add) {
+          btn.translate(
+            width * 0.3 - expandBtnSize / 2 - translateX,
+            -expandBtnSize / 2 - translateY
+          )
+        } else {
+          btn.translate(
+            -expandBtnSize / 2 - translateX,
+            height * 0.3 - expandBtnSize / 2 - translateY
+          )
+        }
       } else {
-        btn.translate(
-          width * 0.3 - expandBtnSize / 2 - translateX,
-          height + expandBtnSize / 2 - translateY
-        )
+        if (add) {
+          btn.translate(
+            width * 0.3 - expandBtnSize / 2 - translateX,
+            height + expandBtnSize / 2 - translateY
+          )
+        } else {
+          btn.translate(
+            width + expandBtnSize / 2 - translateX,
+            height * 0.3 - expandBtnSize / 2 - translateY
+          )
+        }
       }
     },
     renderLine({
@@ -118,18 +133,33 @@ export default {
       translateX,
       translateY,
       width,
-      height
+      height,
+      add
     }) {
       if (node.parent && node.parent.isRoot) {
-        btn.translate(
-          width * 0.3 - expandBtnSize / 2 - translateX,
-          height + expandBtnSize / 2 - translateY
-        )
+        if (add) {
+          btn.translate(
+            width + expandBtnSize / 2 - translateX,
+            height * 0.3 - expandBtnSize / 2 - translateY
+          )
+        } else {
+          btn.translate(
+            width * 0.3 - expandBtnSize / 2 - translateX,
+            height + expandBtnSize / 2 - translateY
+          )
+        }
       } else {
-        btn.translate(
-          width * 0.3 - expandBtnSize / 2 - translateX,
-          -expandBtnSize / 2 - translateY
-        )
+        if (add) {
+          btn.translate(
+            -expandBtnSize / 2 - translateX,
+            height * 0.3 - expandBtnSize / 2 - translateY
+          )
+        } else {
+          btn.translate(
+            width * 0.3 - expandBtnSize / 2 - translateX,
+            -expandBtnSize / 2 - translateY
+          )
+        }
       }
     },
     renderLine({ node, line, top, x, lineLength, height, miny, ctx }) {

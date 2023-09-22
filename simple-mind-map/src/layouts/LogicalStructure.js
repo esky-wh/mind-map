@@ -254,22 +254,35 @@ class LogicalStructure extends Base {
   }
 
   //  渲染按钮
-  renderExpandBtn(node, btn) {
+  renderExpandBtn(node, btn, add) {
     let { width, height } = node
     let { translateX, translateY } = btn.transform()
     // 节点使用横线风格，需要调整展开收起按钮位置
-    let nodeUseLineStyleOffset = this.mindMap.themeConfig.nodeUseLineStyle
-      ? height / 2
-      : 0
-    // 位置没有变化则返回
-    let _x = width
-    let _y = height / 2 + nodeUseLineStyleOffset
-    if (_x === translateX && _y === translateY) {
-      return
-    }
-    btn.translate(_x - translateX, _y - translateY)
-  }
+    if (add) {
+      let nodeUseLineStyleOffset = this.mindMap.themeConfig.nodeUseLineStyle
+        ? width / 2
+        : 0
+      // 位置没有变化则返回
+      let _x = width / 2 + nodeUseLineStyleOffset
+      let _y = height
+      if (_x === translateX && _y === translateY) {
+        return
+      }
+      btn.translate(_x - translateX, _y - translateY)
+    } else {
+      let nodeUseLineStyleOffset = this.mindMap.themeConfig.nodeUseLineStyle
+        ? height / 2
+        : 0
+      // 位置没有变化则返回
+      let _x = width
+      let _y = height / 2 + nodeUseLineStyleOffset
+      if (_x === translateX && _y === translateY) {
+        return
+      }
 
+      btn.translate(_x - translateX, _y - translateY)
+    }
+  }
   //  创建概要节点
   renderGeneralization(node, gLine, gNode) {
     let {

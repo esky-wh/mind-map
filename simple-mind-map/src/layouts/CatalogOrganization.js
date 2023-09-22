@@ -331,17 +331,23 @@ class CatalogOrganization extends Base {
   }
 
   //  渲染按钮
-  renderExpandBtn(node, btn) {
+  renderExpandBtn(node, btn, add) {
     let { width, height, expandBtnSize, isRoot } = node
     if (!isRoot) {
       let { translateX, translateY } = btn.transform()
-      btn.translate(
-        width * 0.3 - expandBtnSize / 2 - translateX,
-        height + expandBtnSize / 2 - translateY
-      )
+      if (add) {
+        btn.translate(
+          width + expandBtnSize / 2 - translateX,
+          height * 0.3 - expandBtnSize / 2 - translateY
+        )
+      } else {
+        btn.translate(
+          width * 0.3 - expandBtnSize / 2 - translateX,
+          height + expandBtnSize / 2 - translateY
+        )
+      }
     }
   }
-
   //  创建概要节点
   renderGeneralization(node, gLine, gNode) {
     let {

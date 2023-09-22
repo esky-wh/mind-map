@@ -337,7 +337,7 @@ class Fishbone extends Base {
   }
 
   //  渲染按钮
-  renderExpandBtn(node, btn) {
+  renderExpandBtn(node, btn, add) {
     let { width, height, expandBtnSize, isRoot } = node
     if (!isRoot) {
       let { translateX, translateY } = btn.transform()
@@ -348,7 +348,8 @@ class Fishbone extends Base {
         translateX,
         translateY,
         width,
-        height
+        height,
+        add
       }
       if (this.checkIsTop(node)) {
         utils.top.renderExpandBtn(params)

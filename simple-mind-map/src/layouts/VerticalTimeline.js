@@ -377,14 +377,22 @@ class VerticalTimeline extends Base {
   }
 
   //  渲染按钮
-  renderExpandBtn(node, btn) {
+  renderExpandBtn(node, btn, add) {
     let { width, height, expandBtnSize, isRoot } = node
     if (!isRoot) {
       let { translateX, translateY } = btn.transform()
       if (node.dir === CONSTANTS.LAYOUT_GROW_DIR.RIGHT) {
-        btn.translate(width - translateX, height / 2 - translateY)
+        if (add) {
+          btn.translate(width / 2 - translateX, height - translateY)
+        } else {
+          btn.translate(width - translateX, height / 2 - translateY)
+        }
       } else {
-        btn.translate(-expandBtnSize - translateX, height / 2 - translateY)
+        if (add) {
+          btn.translate(width / 2 - translateX, -expandBtnSize - translateY)
+        } else {
+          btn.translate(-expandBtnSize - translateX, height / 2 - translateY)
+        }
       }
     }
   }

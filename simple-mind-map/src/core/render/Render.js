@@ -1129,6 +1129,10 @@ class Render {
       }
     } else {
       showExpand()
+      // 不是多选节点展示当前添加节点的按钮
+      if (active) {
+        node.showNodeBtn()
+      }
     }
     node.updateNodeActive()
   }

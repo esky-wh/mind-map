@@ -28,11 +28,11 @@ function createExpandNodeContent() {
     this._openExpandNode.x(0).y(-this.expandBtnSize / 2)
   }
   // 添加子节点按钮
-  this._addChildNodeExpan = SVG(open || btnsSvg.open).size(
+  this._addChildNodeBtn = SVG(open || btnsSvg.open).size(
     this.expandBtnSize,
     this.expandBtnSize
   )
-  this._addChildNodeExpan.x(0).y(-this.expandBtnSize / 2)
+  this._addChildNodeBtn.x(0).y(-this.expandBtnSize / 2)
   // 收起的节点
   this._closeExpandNode = SVG(close || btnsSvg.close).size(
     this.expandBtnSize,
@@ -47,7 +47,7 @@ function createExpandNodeContent() {
   this.style.iconBtn(
     this._openExpandNode,
     this._closeExpandNode,
-    this._addChildNodeExpan,
+    this._addChildNodeBtn,
     this._fillExpandNode
   )
 }
@@ -74,9 +74,10 @@ function updateExpandBtnNode() {
     // 如果当前节点符合条件就显示添加子节点按钮
     if (
       this.nodeData.children.length <= 0 &&
+      this.nodeData.data.isActive &&
       this.mindMap.opt.isShowAddNodeBtn
     ) {
-      node = this._addChildNodeExpan
+      node = this._addChildNodeBtn
     }
     // 显示收起按钮
     if (this.nodeData.children.length > 0 && !this.isRoot) {
@@ -112,10 +113,14 @@ function updateExpandBtnNode() {
 
 //  更新展开收缩按钮位置
 function updateExpandBtnPos() {
-  if (!this._expandBtn) {
-    return
+  // 更新收缩展开添加子节点按钮的位置
+  if (this._expandBtn) {
+    this.renderer.layout.renderExpandBtn(this, this._expandBtn)
   }
-  this.renderer.layout.renderExpandBtn(this, this._expandBtn)
+  // 更新添加统计按钮的位置
+  if (this._nodeBtn) {
+    this.renderer.layout.renderExpandBtn(this, this._nodeBtn, true)
+  }
 }
 
 //  创建展开收缩按钮
@@ -165,12 +170,64 @@ function renderExpandBtn() {
   this.updateExpandBtnNode()
   this.updateExpandBtnPos()
 }
-
+// 更新增加添加同级节点按钮
+function updateAddBtnNode() {
+  let { open } = this.mindMap.opt.expandBtnIcon || {}
+  // 添加同级节点按钮
+  this._addNodeBtn = SVG(open || btnsSvg.open).size(
+    this.expandBtnSize,
+    this.expandBtnSize
+  )
+  this._addNodeBtn.x(-this.expandBtnSize / 2).y(0)
+  let { color, fill } = this.mindMap.opt.expandBtnStyle || {
+    color: '#808080',
+    fill: '#fff',
+    fontColor: '#333333'
+  }
+  this._addNodeBtn.fill({ color: color })
+  let fillNode = new Circle().size(this.expandBtnSize)
+  fillNode.x(-this.expandBtnSize / 2).y(0)
+  fillNode.fill({ color: fill })
+  this._nodeBtn.add(fillNode).add(this._addNodeBtn)
+}
+// 给同级节点按钮增加事件
+function renderNodeBtn() {
+  if (this.isGeneralization || this.isRoot||!this.mindMap.opt.isShowAddNodeBtn) {
+    return
+  }
+  if (this._nodeBtn) {
+    this.group.add(this._nodeBtn)
+  } else {
+    this._nodeBtn = new G()
+    this._nodeBtn.on('mouseover', e => {
+      e.stopPropagation()
+      this._nodeBtn.css({
+        cursor: 'pointer'
+      })
+    })
+    this._nodeBtn.on('mouseout', e => {
+      e.stopPropagation()
+      this._nodeBtn.css({
+        cursor: 'auto'
+      })
+    })
+    this._nodeBtn.on('click', e => {
+      e.stopPropagation()
+      this.mindMap.execCommand('INSERT_NODE')
+    })
+    this.group.add(this._nodeBtn)
+  }
+  this.updateAddBtnNode()
+  this.updateExpandBtnPos()
+}
 //  移除展开收缩按钮
 function removeExpandBtn() {
   if (this._expandBtn && this._showExpandBtn) {
     this._expandBtn.remove()
     this._showExpandBtn = false
+  }
+  if (this._nodeBtn) {
+    this._nodeBtn.remove()
   }
 }
 
@@ -181,7 +238,12 @@ function showExpandBtn() {
     this.renderExpandBtn()
   }, 0)
 }
-
+function showNodeBtn() {
+  if (this.mindMap.opt.alwaysShowExpandBtn) return
+  setTimeout(() => {
+    this.renderNodeBtn()
+  }, 0)
+}
 // 隐藏展开收起按钮
 function hideExpandBtn() {
   if (this.mindMap.opt.alwaysShowExpandBtn || this._isMouseenter) return
@@ -202,5 +264,8 @@ export default {
   removeExpandBtn,
   showExpandBtn,
   hideExpandBtn,
-  sumNode
+  sumNode,
+  showNodeBtn,
+  renderNodeBtn,
+  updateAddBtnNode
 }
