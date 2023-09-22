@@ -27,6 +27,12 @@ function createExpandNodeContent() {
     )
     this._openExpandNode.x(0).y(-this.expandBtnSize / 2)
   }
+  // 添加子节点按钮
+  this._addChildNodeExpan = SVG(open || btnsSvg.open).size(
+    this.expandBtnSize,
+    this.expandBtnSize
+  )
+  this._addChildNodeExpan.x(0).y(-this.expandBtnSize / 2)
   // 收起的节点
   this._closeExpandNode = SVG(close || btnsSvg.close).size(
     this.expandBtnSize,
@@ -41,6 +47,7 @@ function createExpandNodeContent() {
   this.style.iconBtn(
     this._openExpandNode,
     this._closeExpandNode,
+    this._addChildNodeExpan,
     this._fillExpandNode
   )
 }
@@ -60,12 +67,22 @@ function updateExpandBtnNode() {
   }
   this.createExpandNodeContent()
   let node
-  if (expand === false) {
+  if (expand === false && !this.isRoot) {
     node = this._openExpandNode
     this._lastExpandBtnType = false
   } else {
-    node = this._closeExpandNode
-    this._lastExpandBtnType = true
+    // 如果当前节点符合条件就显示添加子节点按钮
+    if (
+      this.nodeData.children.length <= 0 &&
+      this.mindMap.opt.isShowAddNodeBtn
+    ) {
+      node = this._addChildNodeExpan
+    }
+    // 显示收起按钮
+    if (this.nodeData.children.length > 0 && !this.isRoot) {
+      node = this._closeExpandNode
+      this._lastExpandBtnType = true
+    }
   }
 
   if (this._expandBtn) {
@@ -86,7 +103,10 @@ function updateExpandBtnNode() {
         this._fillExpandNode.stroke('none')
       }
     }
-    this._expandBtn.add(this._fillExpandNode).add(node)
+    // 如果有生成的按钮才添加
+    if (node) {
+      this._expandBtn.add(this._fillExpandNode).add(node)
+    }
   }
 }
 
@@ -100,11 +120,8 @@ function updateExpandBtnPos() {
 
 //  创建展开收缩按钮
 function renderExpandBtn() {
-  if (
-    !this.nodeData.children ||
-    this.nodeData.children.length <= 0 ||
-    this.isRoot
-  ) {
+  // 概要不显示按钮
+  if (this.isGeneralization) {
     return
   }
   if (this._expandBtn) {
@@ -125,13 +142,18 @@ function renderExpandBtn() {
     })
     this._expandBtn.on('click', e => {
       e.stopPropagation()
-      // 展开收缩
-      this.mindMap.execCommand(
-        'SET_NODE_EXPAND',
-        this,
-        !this.nodeData.data.expand
-      )
-      this.mindMap.emit('expand_btn_click', this)
+      // 判断当前按钮是否是添加子节点按钮
+      if (this.nodeData.children.length <= 0) {
+        this.mindMap.execCommand('INSERT_CHILD_NODE')
+      } else {
+        // 展开收缩
+        this.mindMap.execCommand(
+          'SET_NODE_EXPAND',
+          this,
+          !this.nodeData.data.expand
+        )
+        this.mindMap.emit('expand_btn_click', this)
+      }
     })
     this._expandBtn.on('dblclick', e => {
       e.stopPropagation()

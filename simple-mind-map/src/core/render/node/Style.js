@@ -203,7 +203,7 @@ class Style {
   }
 
   //  展开收起按钮
-  iconBtn(node, node2, fillNode) {
+  iconBtn(node, node2,node3, fillNode) {
     let { color, fill, fontSize, fontColor } = this.ctx.mindMap.opt
       .expandBtnStyle || {
       color: '#808080',
@@ -214,6 +214,7 @@ class Style {
     }
     node.fill({ color: color })
     node2.fill({ color: color })
+    node3.fill({color: color})
     fillNode.fill({ color: fill })
     if (this.ctx.mindMap.opt.isShowExpandNum) {
       node.attr({ 'font-size': fontSize, 'font-color': fontColor })

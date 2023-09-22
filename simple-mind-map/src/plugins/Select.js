@@ -217,7 +217,8 @@ class Select {
         if (node.nodeData.data.isActive) {
           return
         }
-        this.mindMap.renderer.setNodeActive(node, true)
+        // 传true表示为多选节点不显示添加子节点按钮
+        this.mindMap.renderer.setNodeActive(node, true, true)
         this.mindMap.renderer.addActiveNode(node)
         // })
       } else if (node.nodeData.data.isActive) {

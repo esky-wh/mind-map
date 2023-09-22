@@ -404,8 +404,10 @@ class Render {
         if (!node.nodeData.data.isActive) {
           node.nodeData.data.isActive = true
           this.addActiveNode(node)
-          // 激活节点需要显示展开收起按钮
-          node.showExpandBtn()
+          // 激活节点需要显示展开收起按钮，全选不展示添加子节点按钮
+          if (node.nodeData.children.length > 0) {
+            node.showExpandBtn()
+          }
           setTimeout(() => {
             node.updateNodeActive()
           }, 0)
@@ -1002,15 +1004,24 @@ class Render {
   }
 
   //  设置节点是否激活
-  setNodeActive(node, active) {
+  setNodeActive(node, active, isSelect) {
     this.setNodeData(node, {
       isActive: active
     })
-    // 切换激活状态，需要切换展开收起按钮的显隐
-    if (active) {
-      node.showExpandBtn()
+    const showExpand = () => {
+      if (active) {
+        node.showExpandBtn()
+      } else {
+        node.hideExpandBtn()
+      }
+    }
+    // 切换激活状态，需要切换展开收起按钮的显隐,isSelect为多选节点不显示添加子节点按钮
+    if (isSelect) {
+      if (node.nodeData.children.length > 0) {
+        showExpand()
+      }
     } else {
-      node.hideExpandBtn()
+      showExpand()
     }
     node.updateNodeActive()
   }

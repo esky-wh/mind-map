@@ -73,6 +73,7 @@ class Node {
     this._showExpandBtn = false
     this._openExpandNode = null
     this._closeExpandNode = null
+    this._addChildNodeExpan = null
     this._fillExpandNode = null
     this._lines = []
     this._generalizationLine = null
@@ -392,6 +393,14 @@ class Node {
         return
       }
       this.active(e)
+      // 激活节点时显示添加子节点按钮，判断是否有子节点，激活节点是否只有一个以及是否开启配置允许显示
+      if (
+        this.nodeData.children.length <= 0 &&
+        this.mindMap.renderer.activeNodeList.length <= 1 &&
+        this.mindMap.opt.isShowAddNodeBtn
+      ) {
+        this.showExpandBtn()
+      }
     })
     this.group.on('mousedown', e => {
       const {
@@ -441,8 +450,10 @@ class Node {
     })
     this.group.on('mouseenter', e => {
       this._isMouseenter = true
-      // 显示展开收起按钮
-      this.showExpandBtn()
+      // 子节点大于0显示展开收起按钮
+      if (this.nodeData.children.length > 0) {
+        this.showExpandBtn()
+      }
       this.mindMap.emit('node_mouseenter', this, e)
     })
     this.group.on('mouseleave', e => {
@@ -520,7 +531,15 @@ class Node {
       if (expand && !isActive && !this._isMouseenter) {
         this.hideExpandBtn()
       } else {
-        this.showExpandBtn()
+        // 如果激活节点大于0且当前节点没有子节点不显示添加子节点按钮
+        if (
+          this.mindMap.renderer.activeNodeList.length > 1 &&
+          this.nodeData.children.length <= 0
+        ) {
+          this.hideExpandBtn()
+        } else {
+          this.showExpandBtn()
+        }
       }
     }
     // 更新概要
