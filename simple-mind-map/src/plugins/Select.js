@@ -1,4 +1,4 @@
-import { bfsWalk, throttle } from '../utils'
+import { bfsWalk, throttle, checkTwoRectIsOverlap } from '../utils'
 
 // 节点选择插件
 class Select {
@@ -210,25 +210,20 @@ class Select {
       left = left * scaleX + translateX
       top = top * scaleY + translateY
       if (
-        ((left >= minx && left <= maxx) || (right >= minx && right <= maxx)) &&
-        ((top >= miny && top <= maxy) || (bottom >= miny && bottom <= maxy))
+        checkTwoRectIsOverlap(minx, maxx, miny, maxy, left, right, top, bottom)
       ) {
-        // this.mindMap.batchExecution.push('activeNode' + node.uid, () => {
         if (node.nodeData.data.isActive) {
           return
         }
         // 传true表示为多选节点不显示添加子节点按钮
         this.mindMap.renderer.setNodeActive(node, true, true)
         this.mindMap.renderer.addActiveNode(node)
-        // })
       } else if (node.nodeData.data.isActive) {
-        // this.mindMap.batchExecution.push('activeNode' + node.uid, () => {
         if (!node.nodeData.data.isActive) {
           return
         }
         this.mindMap.renderer.setNodeActive(node, false)
         this.mindMap.renderer.removeActiveNode(node)
-        // })
       }
     })
   }
