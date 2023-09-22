@@ -3,7 +3,8 @@ import {
   resizeImgSize,
   removeHtmlStyle,
   addHtmlStyle,
-  checkIsRichText
+  checkIsRichText,
+  isUndef
 } from '../../../utils'
 import { Image, SVG, A, G, Rect, Text, ForeignObject } from '@svgdotjs/svg.js'
 import iconsSvg from '../../../svg/icons'
@@ -164,7 +165,10 @@ function createTextNode() {
   let lineHeight = this.getStyle('lineHeight', false)
   // 文本超长自动换行
   let textStyle = this.style.getTextFontStyle()
-  let textArr = this.nodeData.data.text.split(/\n/gim)
+  let textArr = []
+  if (!isUndef(this.nodeData.data.text)) {
+    textArr = String(this.nodeData.data.text).split(/\n/gim)
+  }
   let maxWidth = this.mindMap.opt.textAutoWrapWidth
   let isMultiLine = false
   textArr.forEach((item, index) => {
