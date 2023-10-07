@@ -129,6 +129,10 @@ class Base {
         this.renderer.addActiveNode(newNode)
       }
     }
+    // 如果当前节点在激活节点列表里，那么添加上激活的状态
+    if (this.mindMap.renderer.findActiveNodeIndex(newNode) !== -1) {
+      newNode.nodeData.data.isActive = true
+    }
     // 根节点
     if (isRoot) {
       newNode.isRoot = true
@@ -202,9 +206,13 @@ class Base {
   }
 
   //  递归计算节点的宽度
-  getNodeAreaWidth(node) {
+  getNodeAreaWidth(node, withGeneralization = false) {
     let widthArr = []
+    let totalGeneralizationNodeWidth = 0
     let loop = (node, width) => {
+      if (withGeneralization && node.checkHasGeneralization()) {
+        totalGeneralizationNodeWidth += node._generalizationNodeWidth
+      }
       if (node.children.length) {
         width += node.width / 2
         node.children.forEach(item => {
@@ -216,7 +224,7 @@ class Base {
       }
     }
     loop(node, 0)
-    return Math.max(...widthArr)
+    return Math.max(...widthArr) + totalGeneralizationNodeWidth
   }
 
   //  二次贝塞尔曲线

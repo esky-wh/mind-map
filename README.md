@@ -25,18 +25,21 @@ Github：[releases](https://github.com/wanglin2/mind-map/releases)。
 
 百度云盘：[地址](https://pan.baidu.com/s/1huasEbKsGNH2Af68dvWiOg?pwd=3bp3)。
 
+> 客户端版本会落后于在线版本，尝试最新功能请优先使用在线版。
+
 # 特性
 
 - [x] 插件化架构，除核心功能外，其他功能作为插件提供，按需使用，减小打包体积
 - [x] 支持逻辑结构图、思维导图、组织结构图、目录组织图、时间轴（横向、竖向）、鱼骨图等结构
 - [x] 内置多种主题，允许高度自定义样式，支持注册新主题
-- [x] 节点内容支持文本（普通文本、富文本）、图片、图标、超链接、备注、标签、概要
+- [x] 节点内容支持文本（普通文本、富文本）、图片、图标、超链接、备注、标签、概要、数学公式
 - [x] 节点支持拖拽（拖拽移动、自由调整）、多种节点形状，支持使用 DDM 完全自定义节点内容
 - [x] 支持画布拖动、缩放
 - [x] 支持鼠标按键拖动选择和Ctrl+左键两种多选节点方式
 - [x] 支持导出为`json`、`png`、`svg`、`pdf`、`markdown`、`xmind`，支持从`json`、`xmind`、`markdown`导入
-- [x] 支持快捷键、前进后退、关联线、搜索替换、小地图、水印
+- [x] 支持快捷键、前进后退、关联线、搜索替换、小地图、水印、滚动条
 - [x] 提供丰富的配置，满足各种场景各种使用习惯
+- [x] 支持协同编辑
 
 # 安装
 
@@ -91,11 +94,11 @@ const mindMap = new MindMap({
 
 # 请作者喝杯咖啡
 
-开源不易，如果本项目有帮助到你的话，可以考虑请作者喝杯咖啡哟~
+开源不易，如果本项目有帮助到你的话，可以考虑请作者喝杯咖啡~
 
 > 厚椰乳一盒 + 纯牛奶半盒 + 冰块 + 咖啡液 = 生椰拿铁 yyds
 
-> 推荐使用支付宝，微信获取不到头像。转账请备注【思维导图】。你的头像和名字将会出现在下面和[文档页面](https://wanglin2.github.io/mind-map/#/doc/zh/introduction/%E8%AF%B7%E4%BD%9C%E8%80%85%E5%96%9D%E6%9D%AF%E5%92%96%E5%95%A1)
+> 推荐使用支付宝，微信获取不到头像。转账请备注【思维导图】。
 
 <p>
   <img src="./web/src/assets/img/alipay.jpg" style="width: 300px" />
@@ -170,5 +173,33 @@ const mindMap = new MindMap({
     <span>
         <img src="./web/src/assets/avatar/南风.jpg" style="width: 50px;height: 50px;" />
         <span>南风</span>
+    </span>
+    <span>
+        <img src="./web/src/assets/avatar/蜉蝣撼大叔.jpg" style="width: 50px;height: 50px;" />
+        <span>蜉蝣撼大叔</span>
+    </span>
+    <span>
+        <img src="./web/src/assets/avatar/乙.jpg" style="width: 50px;height: 50px;" />
+        <span>乙</span>
+    </span>
+    <span>
+        <img src="./web/src/assets/avatar/敏.jpg" style="width: 50px;height: 50px;" />
+        <span>敏</span>
+    </span>
+    <span>
+        <img src="./web/src/assets/avatar/沐风牧草.jpg" style="width: 50px;height: 50px;" />
+        <span>沐风牧草</span>
+    </span>
+    <span>
+        <img src="./web/src/assets/avatar/有希.jpg" style="width: 50px;height: 50px;" />
+        <span>有希</span>
+    </span>
+    <span>
+        <img src="./web/src/assets/avatar/樊笼.jpg" style="width: 50px;height: 50px;" />
+        <span>樊笼</span>
+    </span>
+    <span>
+        <img src="./web/src/assets/avatar/达仁科技.jpg" style="width: 50px;height: 50px;" />
+        <span>达仁科技</span>
     </span>
 </p>

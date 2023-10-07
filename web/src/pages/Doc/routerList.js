@@ -43,7 +43,7 @@ export default [
       { path: 'richText', title: 'RichText插件' },
       { path: 'select', title: 'Select 插件 ' },
       { path: 'start', title: '开始' },
-      { path: 'translate', title: '参与翻译' },
+      { path: 'translate', title: '贡献' },
       { path: 'utils', title: '内置工具方法' },
       { path: 'view', title: 'View实例' },
       { path: 'watermark', title: 'Watermark插件' },
@@ -56,9 +56,13 @@ export default [
       { path: 'painter', title: 'Painter插件' },
       { path: 'painter', title: 'Painter插件' },
       { path: 'scrollbar', title: 'Scrollbar插件' },
+      { path: 'formula', title: 'Formula插件' },
+      { path: 'cooperate', title: 'Cooperate插件' },
       { path: 'help1', title: '概要/关联线' },
       { path: 'help2', title: '客户端' },
-      { path: 'help3', title: '打开预览在线文件' }
+      { path: 'help3', title: '打开预览在线文件' },
+      { path: 'help4', title: '复制粘贴' },
+      { path: 'help5', title: '导出' }
     ]
   },
   {
@@ -81,7 +85,7 @@ export default [
       { path: 'richText', title: 'RichText plugin' },
       { path: 'select', title: 'Select plugin' },
       { path: 'start', title: 'Start' },
-      { path: 'translate', title: 'Participate in translation' },
+      { path: 'translate', title: 'Contribute' },
       { path: 'utils', title: 'Utility Methods' },
       { path: 'view', title: 'View instance' },
       { path: 'watermark', title: 'Watermark plugin' },
@@ -91,7 +95,10 @@ export default [
       { path: 'nodeImgAdjust', title: 'NodeImgAdjust plugin' },
       { path: 'search', title: 'Search plugin' },
       { path: 'painter', title: 'Painter plugin' },
-      { path: 'scrollbar', title: 'Scrollbar plugin' }
+      { path: 'scrollbar', title: 'Scrollbar plugin' },
+      { path: 'formula', title: 'Formula plugin' },
+      { path: 'cooperate', title: 'Cooperate plugin' },
+      { path: 'client', title: 'Client' }
     ]
   }
 ]

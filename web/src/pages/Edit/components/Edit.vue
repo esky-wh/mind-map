@@ -23,6 +23,7 @@
     <NodeIconToolbar v-if="mindMap" :mindMap="mindMap"></NodeIconToolbar>
     <OutlineEdit v-if="mindMap" :mindMap="mindMap"></OutlineEdit>
     <Scrollbar v-if="isShowScrollbar && mindMap" :mindMap="mindMap"></Scrollbar>
+    <FormulaSidebar v-if="mindMap" :mindMap="mindMap"></FormulaSidebar>
   </div>
 </template>
 
@@ -43,6 +44,8 @@ import NodeImgAdjust from 'simple-mind-map/src/plugins/NodeImgAdjust.js'
 import SearchPlugin from 'simple-mind-map/src/plugins/Search.js'
 import Painter from 'simple-mind-map/src/plugins/Painter.js'
 import ScrollbarPlugin from 'simple-mind-map/src/plugins/Scrollbar.js'
+import Formula from 'simple-mind-map/src/plugins/Formula.js'
+import Cooperate from 'simple-mind-map/src/plugins/Cooperate.js'
 import OutlineSidebar from './OutlineSidebar'
 import Style from './Style'
 import BaseStyle from './BaseStyle'
@@ -75,6 +78,7 @@ import { showLoading, hideLoading } from '@/utils/loading'
 import handleClipboardText from '@/utils/handleClipboardText'
 import Scrollbar from './Scrollbar.vue'
 import exampleData from 'simple-mind-map/example/exampleData'
+import FormulaSidebar from './FormulaSidebar.vue'
 
 // 注册插件
 MindMap.usePlugin(MiniMap)
@@ -91,6 +95,8 @@ MindMap.usePlugin(MiniMap)
   .usePlugin(SearchPlugin)
   .usePlugin(Painter)
   .usePlugin(ScrollbarPlugin)
+  .usePlugin(Formula)
+  // .usePlugin(Cooperate)// 协同插件
 
 // 注册自定义主题
 customThemeList.forEach(item => {
@@ -123,7 +129,8 @@ export default {
     NodeIconSidebar,
     NodeIconToolbar,
     OutlineEdit,
-    Scrollbar
+    Scrollbar,
+    FormulaSidebar
   },
   data() {
     return {
@@ -267,10 +274,10 @@ export default {
       // 如果url中存在要打开的文件，那么思维导图数据、主题、布局都使用默认的
       if (hasFileURL) {
         root = {
-          "data": {
-              "text": "根节点"
+          data: {
+            text: '根节点'
           },
-          "children": []
+          children: []
         }
         layout = exampleData.layout
         theme = exampleData.theme
@@ -279,6 +286,7 @@ export default {
       this.mindMap = new MindMap({
         el: this.$refs.mindMapContainer,
         data: root,
+        fit: false,
         layout: layout,
         theme: theme.template,
         themeConfig: theme.config,
@@ -294,11 +302,11 @@ export default {
           }
         },
         ...(config || {}),
-        iconList: icon,
+        iconList: [...icon],
         useLeftKeySelectionRightKeyDrag: this.useLeftKeySelectionRightKeyDrag,
         customInnerElsAppendTo: null,
         enableAutoEnterTextEditWhenKeydown: true,
-        customHandleClipboardText: handleClipboardText,
+        customHandleClipboardText: handleClipboardText
         // isUseCustomNodeContent: true,
         // 示例1：组件里用到了router、store、i18n等实例化vue组件时需要用到的东西
         // customCreateNodeContent: (node) => {
@@ -372,20 +380,7 @@ export default {
         })
       })
       this.bindSaveEvent()
-      // setTimeout(() => {
-      // 动态给指定节点添加子节点
-      // this.mindMap.execCommand('INSERT_CHILD_NODE', false, this.mindMap.renderer.root, {
-      //   text: '自定义内容'
-      // })
-
-      // 动态给指定节点添加同级节点
-      // this.mindMap.execCommand('INSERT_NODE', false, this.mindMap.renderer.root, {
-      //   text: '自定义内容'
-      // })
-
-      // 动态删除指定节点
-      // this.mindMap.execCommand('REMOVE_NODE', this.mindMap.renderer.root.children[0])
-      // }, 5000);
+      this.testDynamicCreateNodes()
       // 如果应用被接管，那么抛出事件传递思维导图实例
       if (window.takeOverApp) {
         this.$bus.$emit('app_inited', this.mindMap)
@@ -394,6 +389,8 @@ export default {
       if (hasFileURL) {
         this.$bus.$emit('handle_file_url')
       }
+      // 协同测试
+      this.cooperateTest()
     },
 
     // url中是否存在要打开的文件
@@ -479,6 +476,131 @@ export default {
     // 移除节点富文本编辑插件
     removeRichTextPlugin() {
       this.mindMap.removePlugin(RichText)
+    },
+
+    // 测试动态插入节点
+    testDynamicCreateNodes() {
+      // return
+      setTimeout(() => {
+        // 动态给指定节点添加子节点
+        // this.mindMap.execCommand(
+        //   'INSERT_CHILD_NODE',
+        //   false,
+        //   null,
+        //   {
+        //     text: '自定义内容'
+        //   },
+        //   [
+        //     {
+        //       data: {
+        //         text: '自定义子节点'
+        //       }
+        //     }
+        //   ]
+        // )
+        // 动态给指定节点添加同级节点
+        // this.mindMap.execCommand(
+        //   'INSERT_NODE',
+        //   false,
+        //   null,
+        //   {
+        //     text: '自定义内容'
+        //   },
+        //   [
+        //     {
+        //       data: {
+        //         text: '自定义同级节点'
+        //       },
+        //       children: [
+        //         {
+        //           data: {
+        //             text: '自定义同级节点2'
+        //           },
+        //           children: []
+        //         }
+        //       ]
+        //     }
+        //   ]
+        // )
+        // 动态插入多个子节点
+        // this.mindMap.execCommand('INSERT_MULTI_CHILD_NODE', null, [
+        //   {
+        //     data: {
+        //       text: '自定义节点1'
+        //     },
+        //     children: [
+        //       {
+        //         data: {
+        //           text: '自定义节点1-1'
+        //         },
+        //         children: []
+        //       }
+        //     ]
+        //   },
+        //   {
+        //     data: {
+        //       text: '自定义节点2'
+        //     },
+        //     children: [
+        //       {
+        //         data: {
+        //           text: '自定义节点2-1'
+        //         },
+        //         children: []
+        //       }
+        //     ]
+        //   }
+        // ])
+        // 动态插入多个同级节点
+        // this.mindMap.execCommand('INSERT_MULTI_NODE', null, [
+        //   {
+        //     data: {
+        //       text: '自定义节点1'
+        //     },
+        //     children: [
+        //       {
+        //         data: {
+        //           text: '自定义节点1-1'
+        //         },
+        //         children: []
+        //       }
+        //     ]
+        //   },
+        //   {
+        //     data: {
+        //       text: '自定义节点2'
+        //     },
+        //     children: [
+        //       {
+        //         data: {
+        //           text: '自定义节点2-1'
+        //         },
+        //         children: []
+        //       }
+        //     ]
+        //   }
+        // ])
+        // 动态删除指定节点
+        // this.mindMap.execCommand('REMOVE_NODE', this.mindMap.renderer.root.children[0])
+      }, 5000)
+    },
+
+    // 协同测试
+    cooperateTest() {
+      if (this.mindMap.cooperate && this.$route.query.userName) {
+        this.mindMap.cooperate.setProvider(null, {
+          roomName: 'demo-room',
+          signalingList: ['ws://192.168.3.125:4444']
+        })
+        this.mindMap.cooperate.setUserInfo({
+          id: Math.random(),
+          name: this.$route.query.userName,
+          color: ['#409EFF', '#67C23A', '#E6A23C', '#F56C6C', '#909399'][
+            Math.floor(Math.random() * 5)
+          ],
+          avatar: Math.random() > 0.5 ? 'https://img0.baidu.com/it/u=4270674549,2416627993&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1696006800&t=4d32871d14a7224a4591d0c3c7a97311' : ''
+        })
+      }
     }
   }
 }

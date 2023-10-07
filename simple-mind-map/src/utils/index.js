@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
-
+import { nodeDataNoStylePropList } from '../constants/constant'
+import MersenneTwister from './mersenneTwister'
 //  深度优先遍历树
 export const walk = (
   root,
@@ -169,9 +170,10 @@ export const copyNodeTree = (
   keepId = false
 ) => {
   tree.data = simpleDeepClone(root.nodeData ? root.nodeData.data : root.data)
-  // 去除节点id，因为节点id不能重复
-  if (tree.data.id && !keepId) delete tree.data.id
-  if (tree.data.uid) delete tree.data.uid
+  // 重新创建节点uid，因为节点uid不能重复
+  if (!keepId) {
+    tree.data.uid = createUid()
+  }
   if (removeActiveState) {
     tree.data.isActive = false
   }
@@ -464,7 +466,7 @@ export const removeHTMLEntities = str => {
 
 // 获取一个数据的类型
 export const getType = data => {
-  return Object.prototype.toString.call(data).slice(7, -1)
+  return Object.prototype.toString.call(data).slice(8, -1)
 }
 
 // 判断一个数据是否是null和undefined和空字符串
@@ -636,7 +638,7 @@ export const isMobile = () => {
 // 获取对象改变了的的属性
 export const getObjectChangedProps = (oldObject, newObject) => {
   const res = {}
-  Object.keys(newObject).forEach((prop) => {
+  Object.keys(newObject).forEach(prop => {
     const oldVal = oldObject[prop]
     const newVal = newObject[prop]
     if (getType(oldVal) !== getType(newVal)) {
@@ -656,4 +658,216 @@ export const getObjectChangedProps = (oldObject, newObject) => {
     }
   })
   return res
+}
+
+// 判断一个字段是否是节点数据中的样式字段
+export const checkIsNodeStyleDataKey = key => {
+  // 用户自定义字段
+  if (/^_/.test(key)) return false
+  // 不在节点非样式字段列表里，那么就是样式字段
+  if (!nodeDataNoStylePropList.includes(key)) {
+    return true
+  }
+  return false
+}
+
+// 合并图标数组
+// const data = [
+//   { type: 'priority', name: '优先级图标', list: [{ name: '1', icon: 'a' }, { name: 2, icon: 'b' }] },
+//   { type: 'priority', name: '优先级图标', list: [{ name: '2', icon: 'c' }, { name: 3, icon: 'd' }] },
+// ];
+
+// mergerIconList(data) 结果
+
+// [
+//   { type: 'priority', name: '优先级图标', list: [{ name: '1', icon: 'a' }, { name: 2, icon: 'c' }, { name: 3, icon: 'd' }] },
+// ]
+export const mergerIconList = list => {
+  return list.reduce((result, item) => {
+    const existingItem = result.find(x => x.type === item.type)
+    if (existingItem) {
+      item.list.forEach(newObj => {
+        const existingObj = existingItem.list.find(x => x.name === newObj.name)
+        if (existingObj) {
+          existingObj.icon = newObj.icon
+        } else {
+          existingItem.list.push(newObj)
+        }
+      })
+    } else {
+      result.push({ ...item })
+    }
+    return result
+  }, [])
+}
+
+// 从节点实例列表里找出顶层的节点
+export const getTopAncestorsFomNodeList = list => {
+  let res = []
+  list.forEach(node => {
+    if (
+      !list.find(item => {
+        return item.uid !== node.uid && item.isParent(node)
+      })
+    ) {
+      res.push(node)
+    }
+  })
+  return res
+}
+
+// 判断两个矩形是否重叠
+export const checkTwoRectIsOverlap = (
+  minx1,
+  maxx1,
+  miny1,
+  maxy1,
+  minx2,
+  maxx2,
+  miny2,
+  maxy2
+) => {
+  return maxx1 > minx2 && maxx2 > minx1 && maxy1 > miny2 && maxy2 > miny1
+}
+
+// 聚焦指定输入框
+export const focusInput = el => {
+  let selection = window.getSelection()
+  let range = document.createRange()
+  range.selectNodeContents(el)
+  range.collapse()
+  selection.removeAllRanges()
+  selection.addRange(range)
+}
+
+// 聚焦全选指定输入框
+export const selectAllInput = el => {
+  let selection = window.getSelection()
+  let range = document.createRange()
+  range.selectNodeContents(el)
+  selection.removeAllRanges()
+  selection.addRange(range)
+}
+
+// 给指定的节点列表树数据添加附加数据，会修改原数据
+export const addDataToAppointNodes = (appointNodes, data = {}) => {
+  const walk = list => {
+    list.forEach(node => {
+      node.data = {
+        ...node.data,
+        ...data
+      }
+      if (node.children && node.children.length > 0) {
+        walk(node.children)
+      }
+    })
+  }
+  walk(appointNodes)
+  return appointNodes
+}
+
+// 给指定的节点列表树数据添加uid，如果不存在的话，会修改原数据
+export const createUidForAppointNodes = appointNodes => {
+  const walk = list => {
+    list.forEach(node => {
+      if (!node.data) {
+        node.data = {}
+      }
+      if (isUndef(node.data.uid)) {
+        node.data.uid = createUid()
+      }
+      if (node.children && node.children.length > 0) {
+        walk(node.children)
+      }
+    })
+  }
+  walk(appointNodes)
+  return appointNodes
+}
+
+// 传入一个数据，如果该数据是数组，那么返回该数组，否则返回一个以该数据为成员的数组
+export const formatDataToArray = data => {
+  if (!data) return []
+  return Array.isArray(data) ? data : [data]
+}
+
+//  获取节点在同级里的位置索引
+export const getNodeIndex = node => {
+  return node.parent
+    ? node.parent.children.findIndex(item => {
+        return item.uid === node.uid
+      })
+    : 0
+}
+
+// 根据内容生成颜色
+export const generateColorByContent = str => {
+  let hash = 0
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash)
+  }
+  // 这里使用伪随机数的原因是因为
+  // 1. 如果字符串的内容差不多，根据hash生产的颜色就比较相近，不好区分，比如v1.1 v1.2，所以需要加入随机数来使得颜色能够区分开
+  // 2. 普通的随机数每次数值不一样，就会导致每次新增标签原来的标签颜色就会发生改变，所以加入了这个方法，使得内容不变随机数也不变
+  const rng = new MersenneTwister(hash)
+  const h = rng.genrand_int32() % 360
+  return 'hsla(' + h + ', 50%, 50%, 1)'
+}
+
+//  html转义
+export const htmlEscape = str => {
+  ;[
+    ['&', '&amp;'],
+    ['<', '&lt;'],
+    ['>', '&gt;']
+  ].forEach(item => {
+    str = str.replace(new RegExp(item[0], 'g'), item[1])
+  })
+  return str
+}
+
+// 判断两个对象是否相同，只处理对象或数组
+export const isSameObject = (a, b) => {
+  const type = getType(a)
+  // a、b类型不一致，那么肯定不相同
+  if (type !== getType(b)) return false
+  // 如果都是对象
+  if (type === 'Object') {
+    const keysa = Object.keys(a)
+    const keysb = Object.keys(b)
+    // 对象字段数量不一样，肯定不相同
+    if (keysa.length !== keysb.length) return false
+    // 字段数量一样，那么需要遍历字段进行判断
+    for (let i = 0; i < keysa.length; i++) {
+      const key = keysa[i]
+      // b没有a的一个字段，那么肯定不相同
+      if (!keysb.includes(key)) return false
+      // 字段名称一样，那么需要递归判断它们的值
+      const isSame = isSameObject(a[key], b[key])
+      if (!isSame) {
+        return false
+      }
+    }
+    return true
+  } else if (type === 'Array') {
+    // 如果都是数组
+    // 数组长度不一样，肯定不相同
+    if (a.length !== b.length) return false
+    // 长度一样，那么需要遍历进行判断
+    for (let i = 0; i < a.length; i++) {
+      const itema = a[i]
+      const itemb = b[i]
+      const typea = getType(itema)
+      const typeb = getType(itemb)
+      if (typea !== typeb) return false
+      const isSame = isSameObject(itema, itemb)
+      if (!isSame) {
+        return false
+      }
+    }
+    return true
+  } else {
+    // 其他类型，直接全等判断
+    return a === b
+  }
 }

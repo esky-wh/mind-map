@@ -35,11 +35,13 @@ let APIList = [
   'search',
   'painter',
   'scrollbar',
+  'formula',
+  'cooperate',
   'xmind',
   'markdown',
   'utils'
 ]
-let helpList = new Array(3).fill(0).map((_, index) => {
+let helpList = new Array(5).fill(0).map((_, index) => {
   return 'help' + (index + 1)
 })
 

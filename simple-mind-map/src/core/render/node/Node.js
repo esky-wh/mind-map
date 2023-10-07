@@ -6,6 +6,7 @@ import nodeExpandBtnMethods from './nodeExpandBtn'
 import nodeCommandWrapsMethods from './nodeCommandWraps'
 import nodeCreateContentsMethods from './nodeCreateContents'
 import nodeExpandBtnPlaceholderRectMethods from './nodeExpandBtnPlaceholderRect'
+import nodeCooperateMethods from './nodeCooperate'
 import { CONSTANTS } from '../../../constants/constant'
 
 //  节点类
@@ -14,7 +15,7 @@ class Node {
   constructor(opt = {}) {
     // 节点数据
     this.nodeData = this.handleData(opt.data || {})
-    // id
+    // uid
     this.uid = opt.uid
     // 控制实例
     this.mindMap = opt.mindMap
@@ -55,6 +56,8 @@ class Node {
     this.parent = opt.parent || null
     // 子节点
     this.children = opt.children || []
+    // 当前同时操作该节点的用户列表
+    this.userList = []
     // 节点内容的容器
     this.group = null
     this.shapeNode = null // 节点形状节点
@@ -74,6 +77,7 @@ class Node {
     this._openExpandNode = null
     this._closeExpandNode = null
     this._fillExpandNode = null
+    this._userListGroup = null
     this._lines = []
     this._generalizationLine = null
     this._generalizationNode = null
@@ -121,6 +125,12 @@ class Node {
     Object.keys(nodeCreateContentsMethods).forEach(item => {
       this[item] = nodeCreateContentsMethods[item].bind(this)
     })
+    // 协同相关
+    if (this.mindMap.cooperate) {
+      Object.keys(nodeCooperateMethods).forEach((item) => {
+        this[item] = nodeCooperateMethods[item].bind(this)
+      })
+    }
     // 初始化
     this.getSize()
   }
@@ -283,6 +293,8 @@ class Node {
     this.group.add(this.shapeNode)
     // 渲染一个隐藏的矩形区域，用来触发展开收起按钮的显示
     this.renderExpandBtnPlaceholderRect()
+    // 创建协同头像节点
+    if (this.createUserListNode) this.createUserListNode()
     // 概要节点添加一个带所属节点id的类名
     if (this.isGeneralization && this.generalizationBelongNode) {
       this.group.addClass('generalization_' + this.generalizationBelongNode.uid)
@@ -394,7 +406,11 @@ class Node {
       this.active(e)
     })
     this.group.on('mousedown', e => {
-      const { readonly, enableCtrlKeyNodeSelection, useLeftKeySelectionRightKeyDrag } = this.mindMap.opt
+      const {
+        readonly,
+        enableCtrlKeyNodeSelection,
+        useLeftKeySelectionRightKeyDrag
+      } = this.mindMap.opt
       // 只读模式不需要阻止冒泡
       if (!readonly) {
         if (this.isRoot) {
@@ -423,11 +439,9 @@ class Node {
         this.mindMap.renderer[isActive ? 'removeActiveNode' : 'addActiveNode'](
           this
         )
-        this.mindMap.emit(
-          'node_active',
-          isActive ? null : this,
-          [...this.mindMap.renderer.activeNodeList]
-        )
+        this.mindMap.emit('node_active', isActive ? null : this, [
+          ...this.mindMap.renderer.activeNodeList
+        ])
       }
       this.mindMap.emit('node_mousedown', this, e)
     })
@@ -438,12 +452,14 @@ class Node {
       this.mindMap.emit('node_mouseup', this, e)
     })
     this.group.on('mouseenter', e => {
+      if (this.isDrag) return
       this._isMouseenter = true
       // 显示展开收起按钮
       this.showExpandBtn()
       this.mindMap.emit('node_mouseenter', this, e)
     })
     this.group.on('mouseleave', e => {
+      if (!this._isMouseenter) return
       this._isMouseenter = false
       this.hideExpandBtn()
       this.mindMap.emit('node_mouseleave', this, e)
@@ -466,7 +482,11 @@ class Node {
       e.stopPropagation()
       e.preventDefault()
       // 如果是多选节点结束，那么不要触发右键菜单事件
-      if(!useLeftKeySelectionRightKeyDrag && this.mindMap.select.hasSelectRange()) {
+      if (
+        this.mindMap.select &&
+        !useLeftKeySelectionRightKeyDrag &&
+        this.mindMap.select.hasSelectRange()
+      ) {
         return
       }
       if (this.nodeData.data.isActive) {
@@ -519,6 +539,8 @@ class Node {
     }
     // 更新概要
     this.renderGeneralization()
+    // 更新协同头像
+    if (this.updateUserListNode) this.updateUserListNode()
     // 更新节点位置
     let t = this.group.transform()
     // // 如果上次不在可视区内，且本次也不在，那么直接返回
@@ -695,6 +717,61 @@ class Node {
     }
   }
 
+  // 设置节点透明度
+  // 包括连接线和下级节点
+  setOpacity(val) {
+    // 自身及连线
+    this.group.opacity(val)
+    this._lines.forEach(line => {
+      line.opacity(val)
+    })
+    // 子节点
+    this.children.forEach(item => {
+      item.setOpacity(val)
+    })
+    // 概要节点
+    if (this._generalizationNode) {
+      this._generalizationLine.opacity(val)
+      this._generalizationNode.group.opacity(val)
+    }
+  }
+
+  // 隐藏子节点
+  hideChildren() {
+    this._lines.forEach(item => {
+      item.hide()
+    })
+    if (this.children && this.children.length) {
+      this.children.forEach(item => {
+        item.hide()
+      })
+    }
+  }
+
+  // 显示子节点
+  showChildren() {
+    this._lines.forEach(item => {
+      item.show()
+    })
+    if (this.children && this.children.length) {
+      this.children.forEach(item => {
+        item.show()
+      })
+    }
+  }
+
+  // 被拖拽中
+  startDrag() {
+    this.isDrag = true
+    this.group.addClass('smm-node-dragging')
+  }
+
+  // 拖拽结束
+  endDrag() {
+    this.isDrag = false
+    this.group.removeClass('smm-node-dragging')
+  }
+
   //  连线
   renderLine(deep = false) {
     if (this.nodeData.data.expand === false) {
@@ -794,12 +871,12 @@ class Node {
 
   //  检测当前节点是否是某个节点的祖先节点
   isParent(node) {
-    if (this === node) {
+    if (this.uid === node.uid) {
       return false
     }
     let parent = node.parent
     while (parent) {
-      if (this === parent) {
+      if (this.uid === parent.uid) {
         return true
       }
       parent = parent.parent
@@ -809,11 +886,11 @@ class Node {
 
   //  检测当前节点是否是某个节点的兄弟节点
   isBrother(node) {
-    if (!this.parent || this === node) {
+    if (!this.parent || this.uid === node.uid) {
       return false
     }
     return this.parent.children.find(item => {
-      return item === node
+      return item.uid === node.uid
     })
   }
 
