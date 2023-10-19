@@ -22,7 +22,9 @@ class Node {
     // 渲染实例
     this.renderer = opt.renderer
     // 渲染器
-    this.draw = opt.draw || null
+    this.draw = this.mindMap.draw
+    this.nodeDraw = this.mindMap.nodeDraw
+    this.lineDraw = this.mindMap.lineDraw
     // 样式实例
     this.style = new Style(this)
     // 形状实例
@@ -127,7 +129,7 @@ class Node {
     })
     // 协同相关
     if (this.mindMap.cooperate) {
-      Object.keys(nodeCooperateMethods).forEach((item) => {
+      Object.keys(nodeCooperateMethods).forEach(item => {
         this[item] = nodeCooperateMethods[item].bind(this)
       })
     }
@@ -428,17 +430,16 @@ class Node {
       // 多选和取消多选
       if (e.ctrlKey && enableCtrlKeyNodeSelection) {
         this.isMultipleChoice = true
-        let isActive = this.nodeData.data.isActive
+        let isActive = this.getData('isActive')
         if (!isActive)
           this.mindMap.emit(
             'before_node_active',
             this,
             this.renderer.activeNodeList
           )
-        this.mindMap.execCommand('SET_NODE_ACTIVE', this, !isActive)
-        this.mindMap.renderer[isActive ? 'removeActiveNode' : 'addActiveNode'](
-          this
-        )
+        this.mindMap.renderer[
+          isActive ? 'removeNodeFromActiveList' : 'addNodeToActiveList'
+        ](this)
         this.mindMap.emit('node_active', isActive ? null : this, [
           ...this.mindMap.renderer.activeNodeList
         ])
@@ -489,10 +490,13 @@ class Node {
       ) {
         return
       }
-      if (this.nodeData.data.isActive) {
-        this.renderer.clearActive()
+      // 如果有且只有当前节点激活了，那么不需要重新激活
+      if (
+        !(this.getData('isActive') && this.renderer.activeNodeList.length === 1)
+      ) {
+        this.renderer.clearActiveNodeList()
+        this.active(e)
       }
-      this.active(e)
       this.mindMap.emit('node_contextmenu', e, this)
     })
   }
@@ -503,13 +507,12 @@ class Node {
       return
     }
     e && e.stopPropagation()
-    if (this.nodeData.data.isActive) {
+    if (this.getData('isActive')) {
       return
     }
     this.mindMap.emit('before_node_active', this, this.renderer.activeNodeList)
-    this.renderer.clearActive()
-    this.mindMap.execCommand('SET_NODE_ACTIVE', this, true)
-    this.renderer.addActiveNode(this)
+    this.renderer.clearActiveNodeList()
+    this.renderer.addNodeToActiveList(this)
     this.mindMap.emit('node_active', this, [...this.renderer.activeNodeList])
   }
 
@@ -518,7 +521,7 @@ class Node {
     if (!this.group) {
       return
     }
-    this.updateNodeActive()
+    this.updateNodeActiveClass()
     let { alwaysShowExpandBtn } = this.mindMap.opt
     if (alwaysShowExpandBtn) {
       // 需要移除展开收缩按钮
@@ -529,7 +532,7 @@ class Node {
         this.renderExpandBtn()
       }
     } else {
-      let { isActive, expand } = this.nodeData.data
+      let { isActive, expand } = this.getData()
       // 展开状态且非激活状态，且当前鼠标不在它上面，才隐藏
       if (expand && !isActive && !this._isMouseenter) {
         this.hideExpandBtn()
@@ -594,10 +597,23 @@ class Node {
   }
 
   // 更新节点激活状态
-  updateNodeActive() {
+  updateNodeActiveClass() {
     if (!this.group) return
-    const isActive = this.nodeData.data.isActive
+    const isActive = this.getData('isActive')
     this.group[isActive ? 'addClass' : 'removeClass']('active')
+  }
+
+  // 根据是否激活更新节点
+  updateNodeByActive(active) {
+    if (this.group) {
+      // 切换激活状态，需要切换展开收起按钮的显隐
+      if (active) {
+        this.showExpandBtn()
+      } else {
+        this.hideExpandBtn()
+      }
+      this.updateNodeActiveClass()
+    }
   }
 
   //  递归渲染
@@ -613,11 +629,11 @@ class Node {
         cursor: 'default'
       })
       this.bindGroupEvent()
-      this.draw.add(this.group)
+      this.nodeDraw.add(this.group)
       this.layout()
       this.update()
     } else {
-      this.draw.add(this.group)
+      this.nodeDraw.add(this.group)
       if (this.needLayout) {
         this.needLayout = false
         this.layout()
@@ -629,7 +645,7 @@ class Node {
     if (
       this.children &&
       this.children.length &&
-      this.nodeData.data.expand !== false
+      this.getData('expand') !== false
     ) {
       let index = 0
       this.children.forEach(item => {
@@ -674,6 +690,9 @@ class Node {
     this.removeGeneralization()
     this.removeLine()
     this.group = null
+    if (this.parent) {
+      this.parent.removeLine()
+    }
   }
 
   //  隐藏节点
@@ -774,7 +793,7 @@ class Node {
 
   //  连线
   renderLine(deep = false) {
-    if (this.nodeData.data.expand === false) {
+    if (this.getData('expand') === false) {
       return
     }
     let childrenLen = this.nodeData.children.length
@@ -788,7 +807,7 @@ class Node {
     if (childrenLen > this._lines.length) {
       // 创建缺少的线
       new Array(childrenLen - this._lines.length).fill(0).forEach(() => {
-        this._lines.push(this.draw.path())
+        this._lines.push(this.lineDraw.path())
       })
     } else if (childrenLen < this._lines.length) {
       // 删除多余的线
@@ -896,7 +915,7 @@ class Node {
 
   //  获取padding值
   getPaddingVale() {
-    let { isActive } = this.nodeData.data
+    let { isActive } = this.getData()
     return {
       paddingX: this.getStyle('paddingX', true, isActive),
       paddingY: this.getStyle('paddingY', true, isActive)
@@ -939,7 +958,7 @@ class Node {
 
   //  获取数据
   getData(key) {
-    return key ? this.nodeData.data[key] || '' : this.nodeData.data
+    return key ? this.nodeData.data[key] : this.nodeData.data
   }
 
   // 是否存在自定义样式

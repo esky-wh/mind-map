@@ -65,11 +65,13 @@ The folder containing the packaged resources for the `web` folder.
 
 [Explore how to export HTML and SVG as images](https://juejin.cn/post/7276712861514170409)
 
+[How does the dom-to-image library convert HTML into images](https://juejin.cn/post/7287913415803764747)
+
 ## Special Note
 
 This project can be used for learning and reference. Please deeply experience whether it can meet your needs when using it for actual projects.
 
-This project may not have fully tested every function point, so there may be bugs. In addition, when the number of nodes is very large, there may be some performance issues. Because everyone can accept different levels of congestion, you can test the maximum number of nodes yourself.
+This project may not have fully tested every function point, so there may be bugs. In addition, when the number of nodes is very large, there may be some performance issues. Because everyone can accept different levels of congestion, you can test the maximum number of nodes yourself. Generally speaking, within 500 nodes, it is more smooth, while over 1000 nodes have more noticeable lag.
 
 If you have suggestions or find bugs, you can submit [issues](https://github.com/wanglin2/mind-map/issues) here.
 
@@ -222,5 +224,13 @@ Open source is not easy. If this project is helpful to you, you can invite the a
     <div style="display: flex; flex-direction: column; align-items: center; width: fit-content; margin: 5px;">
         <img src="../../../../assets/avatar/达仁科技.jpg" style="width: 50px;height: 50px;object-fit: cover;border-radius: 50%;" />
         <p>达仁科技</p>
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: center; width: fit-content; margin: 5px;">
+        <img src="../../../../assets/avatar/小逗比.png" style="width: 50px;height: 50px;object-fit: cover;border-radius: 50%;" />
+        <p>小逗比</p>
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: center; width: fit-content; margin: 5px;">
+        <img src="../../../../assets/avatar/天清如愿.jpg" style="width: 50px;height: 50px;object-fit: cover;border-radius: 50%;" />
+        <p>天清如愿</p>
     </div>
 </div>
